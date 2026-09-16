@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, RefreshCw, ShieldAlert, Wallet } from 'lucide-react';
+import { Zap, RefreshCw, ShieldAlert, Wallet, Network, ArrowDown } from 'lucide-react';
 import { PRESET_TOKENS } from '@/lib/landing';
 import type { PresetToken } from '@/lib/landing';
 import { playClick } from '@/lib/sound-fx';
@@ -710,8 +710,9 @@ export function Demo({ registerScanner }: DemoProps) {
                       onClick={() => reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
                       className="w-full mt-2.5 py-2 px-3 rounded-xl bg-gradient-to-r from-[#7c3aed]/25 to-[#a855f7]/25 hover:from-[#7c3aed]/40 hover:to-[#a855f7]/40 border border-[#7c3aed]/40 text-[#c4b5fd] hover:text-white font-mono text-[11px] flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_0_15px_rgba(124,58,237,0.15)] shrink-0"
                     >
-                      <span>📊 Detailed Forensic Graph & Analysis Generated Below</span>
-                      <span className="text-[#a855f7] font-bold">↓</span>
+                      <Network className="w-3.5 h-3.5 text-[#a855f7] shrink-0" />
+                      <span>VIEW FORENSIC GRAPH & DETAILED REPORT</span>
+                      <ArrowDown className="w-3.5 h-3.5 text-[#a855f7] shrink-0" />
                     </button>
                   )}
                 </motion.div>
