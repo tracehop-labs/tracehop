@@ -5,7 +5,9 @@ import { Zap } from 'lucide-react';
 import { FaTelegramPlane } from 'react-icons/fa';
 
 const envThreshold = Number(process.env.NEXT_PUBLIC_HOLD_THRESHOLD ?? NaN);
-const fmtThreshold = () => Number.isFinite(envThreshold) ? envThreshold.toLocaleString('en-US') : '50,000';
+const envSymbol = process.env.NEXT_PUBLIC_HOLD_TOKEN_SYMBOL || 'ARDRILL';
+const envFreeTotal = Number(process.env.NEXT_PUBLIC_FREE_ANON_SCANS ?? 3);
+const fmtThreshold = () => Number.isFinite(envThreshold) ? envThreshold.toLocaleString('en-US') : '15,000';
 
 function SparkleStar({ x, y, size = 11, delay = 0 }: { x: number; y: number; size?: number; delay?: number }) {
   return (
@@ -160,7 +162,7 @@ export function Cta() {
 
             {/* Pricing strip: real gating, no surprises */}
             <div className="mb-8 font-mono text-[11px] sm:text-xs whitespace-nowrap">
-              <span className="px-4 py-1.5 rounded-lg bg-[#120d2b] border border-[#2e215c] text-[#c4b5fd]">3 FREE SCANS → HOLD {fmtThreshold()}+ $ARDRILL = UNLIMITED</span>
+              <span className="px-4 py-1.5 rounded-lg bg-[#120d2b] border border-[#2e215c] text-[#c4b5fd]">{envFreeTotal} FREE SCANS → HOLD {fmtThreshold()}+ ${envSymbol} = UNLIMITED</span>
             </div>
 
             {/* Action Buttons */}
