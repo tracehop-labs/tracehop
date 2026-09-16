@@ -171,7 +171,7 @@ export function Navbar() {
           <motion.a
             whileHover={{ scale: 1.06, y: -1 }}
             whileTap={{ scale: 0.94 }}
-            href="https://x.com/TraceHop"
+            href="https://x.com/tracehopauto"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="X (Twitter)"

@@ -73,7 +73,7 @@ export function Footer() {
                 <FaTelegramPlane className="w-3.5 h-3.5" />
               </a>
               <a
-                href="https://x.com/TraceHop"
+                href="https://x.com/tracehopauto"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="X (Twitter)"
@@ -134,7 +134,7 @@ export function Footer() {
               <span>Telegram Community</span>
             </a>
             <a
-              href="https://x.com/TraceHop"
+              href="https://x.com/tracehopauto"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 py-2 px-3.5 rounded-xl bg-[#0e0a22] hover:bg-[#181138] border border-[#251c47] text-white text-xs font-medium transition-all"

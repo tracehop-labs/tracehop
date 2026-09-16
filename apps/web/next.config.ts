@@ -5,12 +5,12 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/x",
-        destination: "https://x.com/TraceHopAgent",
+        destination: "https://x.com/tracehopauto",
         permanent: true,
       },
       {
         source: "/telegram",
-        destination: "https://t.me/TraceHopAgentBot",
+        destination: "https://t.me/tracehop_bot",
         permanent: true,
       },
     ];
