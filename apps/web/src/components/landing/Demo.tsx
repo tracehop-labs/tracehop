@@ -482,6 +482,11 @@ export function Demo({ registerScanner }: DemoProps) {
                   type="text"
                   value={inputMint}
                   onChange={(e) => setInputMint(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !isScanning) {
+                      handleStartScan();
+                    }
+                  }}
                   placeholder="Paste token mint address..."
                   className="w-full bg-transparent px-4 sm:px-5 py-2.5 text-xs sm:text-sm text-white placeholder-[#64748b] font-sans focus:outline-none"
                 />
@@ -509,21 +514,26 @@ export function Demo({ registerScanner }: DemoProps) {
             {/* Preset Chips */}
             <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 text-xs font-mono mb-1">
               <span className="text-[#94a3b8] font-medium mr-1">Try these:</span>
-              {PRESET_TOKENS.map((token) => (
+              {PRESET_TOKENS.slice(0, 2).map((token) => (
                 <button
-                  key={token.ticker}
-                  onClick={() => handleStartScan(token)}
+                  key={token.mint}
+                  onClick={() => {
+                    setInputMint(token.mint);
+                    setSelectedToken(token);
+                  }}
                   type="button"
                   disabled={isScanning}
-                  className={`px-3.5 py-1.5 rounded-xl border transition-all ${
+                  title={token.mint}
+                  className={`px-3 sm:px-3.5 py-1.5 rounded-xl border transition-all whitespace-nowrap text-xs ${
                     isScanning ? 'cursor-not-allowed opacity-40' : 'cursor-pointer'
                   } ${
-                    hasScanned && selectedToken.ticker === token.ticker
+                    inputMint.trim().toLowerCase() === token.mint.toLowerCase()
                       ? 'bg-[#1b143d] border-[#7c3aed] text-white shadow-[0_0_6px_rgba(124,58,237,0.2)]'
                       : 'bg-[#100b26] border-[#2c2054] text-[#c4b5fd] hover:text-white hover:border-[#7c3aed]/60'
                   }`}
                 >
-                  {token.ticker}
+                  <span className="hidden sm:inline">{token.mint.slice(0, 10)}...{token.mint.slice(-8)}</span>
+                  <span className="sm:hidden">{token.mint.slice(0, 8)}...{token.mint.slice(-6)}</span>
                 </button>
               ))}
             </div>

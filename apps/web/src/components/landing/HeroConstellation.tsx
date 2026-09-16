@@ -51,9 +51,9 @@ export function HeroConstellation({ rabbitMoveX, rabbitMoveY }: HeroConstellatio
                       <stop offset="50%" stopColor="#7c3aed" stopOpacity="0.16" />
                       <stop offset="100%" stopColor="#7c3aed" stopOpacity="0" />
                     </linearGradient>
-                    <linearGradient id="solGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#00FFA3" />
-                      <stop offset="100%" stopColor="#DC1FFF" />
+                    <linearGradient id="robinhoodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#E5FF66" />
+                      <stop offset="100%" stopColor="#CCFF00" />
                     </linearGradient>
                   </defs>
 
@@ -274,7 +274,7 @@ export function HeroConstellation({ rabbitMoveX, rabbitMoveY }: HeroConstellatio
                   </circle>
 
                   {/* Node B (493, 172) - Shockwave hit at 2.205s [Light 1] */}
-                  <circle cx="493" cy="172" r="22" fill="none" stroke="#c084fc" strokeWidth="2.8" opacity="0">
+                  <circle cx="493" cy="172" r="22" fill="none" stroke="#CCFF00" strokeWidth="2.8" opacity="0">
                     <animate attributeName="r" values="22; 22; 38; 54; 22" keyTimes="0; 0.544; 0.571; 0.639; 1" dur="4.0s" repeatCount="indefinite" />
                     <animate attributeName="opacity" values="0; 0; 1; 0; 0" keyTimes="0; 0.544; 0.571; 0.639; 1" dur="4.0s" repeatCount="indefinite" />
                   </circle>
@@ -378,13 +378,14 @@ export function HeroConstellation({ rabbitMoveX, rabbitMoveY }: HeroConstellatio
                       </svg>
                     );
                   } else if (node.id === 'node-b') {
-                    // Official Solana Protocol Logo (Speed Slants)
-                    discBorderClass = 'w-10 h-10 sm:w-12 sm:h-12 bg-[#12082b]/95 border-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.35)]';
+                    // Official Robinhood Chain Feather Logo (Electric Chartreuse #CCFF00 + Black Feather)
+                    discBorderClass = 'w-10 h-10 sm:w-12 sm:h-12 bg-[#CCFF00] border-[#E5FF66] shadow-[0_0_14px_rgba(204,255,0,0.65)]';
                     NodeEmblem = (
-                      <svg viewBox="0 0 397 311" className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-[0_0_5px_rgba(20,241,149,0.5)]" fill="none">
-                        <path d="M64.6 237.9c2.4-2.4 5.7-3.8 9.2-3.8h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1l62.7-62.7z" fill="url(#solGrad)" />
-                        <path d="M64.6 3.8C67 1.4 70.3 0 73.8 0h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1L64.6 3.8z" fill="url(#solGrad)" />
-                        <path d="M333.1 120.1c-2.4-2.4-5.7-3.8-9.2-3.8H6.5c-5.8 0-8.7 7-4.6 11.1l62.7 62.7c2.4 2.4 5.7 3.8 9.2 3.8h317.4c5.8 0 8.7-7 4.6-11.1l-62.7-62.7z" fill="url(#solGrad)" />
+                      <svg viewBox="0 0 24 24" className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-[0_0_2px_rgba(0,0,0,0.4)]" fill="none">
+                        <path
+                          d="M2.84 24h.53c.096 0 .192-.048.224-.128C7.591 13.696 11.94 8.656 14.67 5.638c.112-.128.064-.225-.096-.225h-4.88a.55.55 0 0 0-.45.225L5.746 9.972c-.514.642-.642 1.236-.642 2.086v4.43c-1.14 3.194-1.862 5.361-2.392 7.32-.032.125.016.192.129.192M20.447.646c-.754-.802-4.157-.834-5.73-.224a3 3 0 0 0-.786.465 41 41 0 0 0-3.323 3.178c-.112.113-.064.225.097.225h5.409c.497 0 .786.289.786.786v6.1c0 .16.128.208.225.064l3.258-4.254c.53-.69.69-.898.835-1.861.192-1.413.08-3.58-.77-4.479m-6.982 16.18 2.231-3.676a.7.7 0 0 0 .064-.29V6.73c0-.16-.112-.225-.224-.097-3.355 3.74-5.971 7.672-8.395 12.407-.06.12.016.225.16.177l5.009-1.54c.565-.174.882-.402 1.155-.852"
+                          fill="#000000"
+                        />
                       </svg>
                     );
                   } else if (node.id === 'node-a') {
