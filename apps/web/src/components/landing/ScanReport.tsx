@@ -67,9 +67,12 @@ function FundingGraph({ uaim, source }: { uaim: any; source?: string }) {
   const edges: any[] = uaim?.fundingGraph?.edges ?? [];
   const nodes: any[] = uaim?.fundingGraph?.nodes ?? [];
   const deployer: string = uaim?.deployment?.deployer ?? '';
+  const [activeNode, setActiveNode] = useState<{ id: string; label: string; role: string; address: string; links: number } | null>(null);
+
   if (edges.length === 0 && nodes.length === 0) {
     return <p className="font-mono text-[11px] text-[#4a5568] py-2">No funding data available for this token.</p>;
   }
+
   const typeOf = new Map<string, string>(nodes.map((n: any) => [n.address, n.type]));
   const groups = new Map<string, string[]>();
   for (const e of edges) {
@@ -82,81 +85,269 @@ function FundingGraph({ uaim, source }: { uaim: any; source?: string }) {
       groups.set(n.address, []);
     }
   }
+
   const parents = [...groups.keys()];
-  const W = 380;
-  const rowH = 44;
-  const H = Math.max(80, parents.length * rowH + 16);
-  const colorOf = (addr: string): string => {
-    if (deployer && addr.toLowerCase() === deployer.toLowerCase()) return '#fb7185';
-    if (typeOf.get(addr) === 'cex') return '#34d399';
-    return '#f59e0b';
-  };
-  const labelOf = (addr: string): string => {
-    if (deployer && addr.toLowerCase() === deployer.toLowerCase()) return 'DEPLOYER';
-    if (typeOf.get(addr) === 'cex') return 'CEX';
-    return 'PARENT';
-  };
+  const W = 460;
+  const H = 320;
+  const cx = W / 2;
+  const cy = H / 2;
+
+  // 1. Center Core Node: Deployer (or Primary Funder Hub)
+  const deployerAddr = deployer || (parents[0] ?? '');
+  const hasDeployer = Boolean(deployerAddr);
+
+  interface GraphNode {
+    id: string;
+    address: string;
+    label: string;
+    role: string;
+    x: number;
+    y: number;
+    color: string;
+    r: number;
+    links: number;
+  }
+
+  interface GraphLink {
+    id: string;
+    from: string;
+    to: string;
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+    cx: number;
+    cy: number;
+    color: string;
+    isClustered: boolean;
+  }
+
+  const graphNodes: GraphNode[] = [];
+  const graphLinks: GraphLink[] = [];
+
+  if (hasDeployer) {
+    graphNodes.push({
+      id: deployerAddr,
+      address: deployerAddr,
+      label: 'DEPLOYER',
+      role: 'Token Deployer',
+      x: cx,
+      y: cy,
+      color: '#fb7185',
+      r: 11,
+      links: edges.filter(e => e.from?.toLowerCase() === deployerAddr.toLowerCase() || e.to?.toLowerCase() === deployerAddr.toLowerCase()).length,
+    });
+  }
+
+  // 2. Funder Nodes (CEX, Whales, Parents) orbiting in Tier 1
+  const funderParents = parents.filter(p => !hasDeployer || p.toLowerCase() !== deployerAddr.toLowerCase());
+  const P = Math.max(1, funderParents.length);
+  const r1 = P === 1 ? 75 : 85;
+  const parentPositions = new Map<string, { x: number; y: number; angle: number }>();
+
+  funderParents.forEach((p, i) => {
+    const angle = (2 * Math.PI * i) / P - Math.PI / 2;
+    const px = cx + r1 * Math.cos(angle);
+    const py = cy + (r1 * 0.85) * Math.sin(angle);
+    parentPositions.set(p, { x: px, y: py, angle });
+
+    const isCex = typeOf.get(p) === 'cex';
+    const wallets = groups.get(p) ?? [];
+    const color = isCex ? '#34d399' : '#f59e0b';
+
+    graphNodes.push({
+      id: p,
+      address: p,
+      label: isCex ? 'CEX' : 'FUNDER',
+      role: isCex ? 'CEX Deposit Pool' : 'Funding Parent',
+      x: px,
+      y: py,
+      color,
+      r: 8.5,
+      links: wallets.length + (hasDeployer ? 1 : 0),
+    });
+
+    if (hasDeployer) {
+      graphLinks.push({
+        id: `link-dep-${p}`,
+        from: p,
+        to: deployerAddr,
+        x1: px,
+        y1: py,
+        x2: cx,
+        y2: cy,
+        cx: (px + cx) / 2,
+        cy: (py + cy) / 2,
+        color: '#fb7185',
+        isClustered: false,
+      });
+    }
+  });
+
+  // 3. Child Buyer Wallets in Tier 2 (Outer Orbit)
+  parents.forEach((p) => {
+    const wallets = groups.get(p) ?? [];
+    const pPos = parentPositions.get(p) || { x: cx, y: cy, angle: 0 };
+    const pAngle = pPos.angle;
+    const K = Math.min(wallets.length, 5);
+    const clustered = wallets.length > 1;
+    const arcSpan = P === 1 ? Math.PI * 1.3 : Math.min(Math.PI * 0.7, (2 * Math.PI / P) * 0.85);
+
+    wallets.slice(0, K).forEach((w, wi) => {
+      if (hasDeployer && w.toLowerCase() === deployerAddr.toLowerCase()) return;
+
+      const subAngle = pAngle - arcSpan / 2 + (wi + 0.5) * (arcSpan / K);
+      const r2 = 135 + (wi % 2) * 12;
+      const wx = cx + r2 * Math.cos(subAngle);
+      const wy = cy + (r2 * 0.85) * Math.sin(subAngle);
+
+      const color = clustered ? '#ff7a29' : '#a855f7';
+
+      graphNodes.push({
+        id: w,
+        address: w,
+        label: clustered ? 'CLUSTER' : 'BUYER',
+        role: clustered ? 'Coordinated Cluster' : 'Early Buyer',
+        x: wx,
+        y: wy,
+        color,
+        r: clustered ? 5 : 4.5,
+        links: 1,
+      });
+
+      const midX = (pPos.x + wx) / 2;
+      const midY = (pPos.y + wy) / 2;
+      graphLinks.push({
+        id: `link-w-${p}-${w}`,
+        from: p,
+        to: w,
+        x1: pPos.x,
+        y1: pPos.y,
+        x2: wx,
+        y2: wy,
+        cx: (midX + cx) / 2,
+        cy: (midY + cy) / 2,
+        color: clustered ? '#f59e0b' : '#7c3aed',
+        isClustered: clustered,
+      });
+    });
+  });
+
   return (
-    <div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: Math.min(300, H) }}>
+    <div className="relative overflow-hidden rounded-xl bg-[#070514] border border-[#1e1735]/80 p-2">
+      {/* HUD Active Node Inspector Floating Overlay */}
+      {activeNode && (
+        <div className="absolute top-3 right-3 z-20 pointer-events-none bg-[#0c081e]/90 border border-[#7c3aed]/40 rounded-lg px-2.5 py-1.5 shadow-[0_0_15px_rgba(124,58,237,0.3)] backdrop-blur-sm font-mono text-[9px] text-[#cbd5e1] space-y-0.5">
+          <div className="flex items-center gap-1.5 font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-current" />
+            <span className="text-white uppercase">{activeNode.label}</span>
+            <span className="text-[#a855f7]">({activeNode.role})</span>
+          </div>
+          <div className="text-[#94a3b8]">{short(activeNode.address)}</div>
+          <div className="text-[8px] text-[#64748b]">{activeNode.links} on-chain links</div>
+        </div>
+      )}
+
+      {/* Real SVG Constellation Graph */}
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto select-none" style={{ maxHeight: '310px' }}>
         <defs>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="2" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          <filter id="nodeGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
           </filter>
         </defs>
-        {parents.map((p, pi) => {
-          const wallets = groups.get(p)!;
-          const y = 22 + pi * rowH;
-          const px = 10;
-          const maxWallets = 8;
-          const shownWallets = wallets.slice(0, maxWallets);
-          const clustered = wallets.length > 1;
-          const endX = 160 + (shownWallets.length > 0 ? (shownWallets.length - 1) * 20 : 0);
+
+        {/* Sonar Radar Backdrop Rings */}
+        <circle cx={cx} cy={cy} r={r1} stroke="#2a1e54" strokeWidth="0.8" strokeDasharray="3 5" fill="none" opacity="0.45" />
+        <circle cx={cx} cy={cy} r={138} stroke="#1f1642" strokeWidth="0.8" strokeDasharray="4 6" fill="none" opacity="0.35" />
+        <line x1={cx - 150} y1={cy} x2={cx + 150} y2={cy} stroke="#2a1e54" strokeWidth="0.5" strokeDasharray="2 6" opacity="0.3" />
+        <line x1={cx} y1={cy - 120} x2={cx} y2={cy + 120} stroke="#2a1e54" strokeWidth="0.5" strokeDasharray="2 6" opacity="0.3" />
+
+        {/* Center Deployer Pulse Rings */}
+        {hasDeployer && (
+          <g>
+            <circle cx={cx} cy={cy} r={20} fill="none" stroke="#fb7185" strokeWidth="0.8" opacity="0.3">
+              <animate attributeName="r" values="14; 28; 14" dur="3s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.4; 0; 0.4" dur="3s" repeatCount="indefinite" />
+            </circle>
+          </g>
+        )}
+
+        {/* Curved Bezier Splines (Network Links) */}
+        {graphLinks.map((l) => {
+          const isHighlighted = activeNode && (activeNode.address.toLowerCase() === l.from.toLowerCase() || activeNode.address.toLowerCase() === l.to.toLowerCase());
           return (
-            <g key={p}>
-              {/* Connector line between parent box and wallet cluster */}
-              {shownWallets.length > 0 && (
-                <line
-                  x1={px + 130}
-                  y1={y}
-                  x2={endX}
-                  y2={y}
-                  stroke={clustered ? '#f59e0b' : '#3b2d6e'}
-                  strokeWidth="1.2"
-                  strokeDasharray={clustered ? 'none' : '3 3'}
-                  opacity={clustered ? 0.7 : 0.4}
-                />
+            <path
+              key={l.id}
+              d={`M ${l.x1} ${l.y1} Q ${l.cx} ${l.cy} ${l.x2} ${l.y2}`}
+              fill="none"
+              stroke={l.color}
+              strokeWidth={isHighlighted ? 2.2 : l.isClustered ? 1.4 : 0.9}
+              strokeDasharray={l.isClustered ? '4 3' : '2 4'}
+              opacity={isHighlighted ? 1 : l.isClustered ? 0.75 : 0.4}
+              className="transition-all duration-200"
+            />
+          );
+        })}
+
+        {/* Graph Nodes */}
+        {graphNodes.map((n) => {
+          const isSelected = activeNode?.address.toLowerCase() === n.address.toLowerCase();
+          return (
+            <g
+              key={n.id}
+              className="cursor-pointer group"
+              onMouseEnter={() => setActiveNode(n)}
+              onMouseLeave={() => setActiveNode(null)}
+            >
+              {/* Outer halo on hover */}
+              {isSelected && (
+                <circle cx={n.x} cy={n.y} r={n.r + 5} fill="none" stroke={n.color} strokeWidth="1" strokeDasharray="2 3" opacity="0.8" />
               )}
-              {/* Parent badge */}
-              <rect x={px} y={y - 13} width={130} height={26} rx={7} fill="#110d24" stroke={colorOf(p)} strokeOpacity="0.6" strokeWidth="0.8" />
-              <circle cx={px + 10} cy={y} r={4} fill={colorOf(p)} filter="url(#glow)" />
-              <text x={px + 20} y={y - 1} fill="#e2e8f0" fontSize="9" fontFamily="monospace" fontWeight="600">{short(p)}</text>
-              <text x={px + 20} y={y + 8} fill={colorOf(p)} fontSize="7.5" fontFamily="monospace" opacity="0.9">{labelOf(p)} · {wallets.length} {wallets.length === 1 ? 'wallet' : 'wallets'}</text>
-              {/* Child wallet nodes */}
-              {shownWallets.map((w, wi) => {
-                const wx = 160 + wi * 20;
-                return (
-                  <g key={w}>
-                    <circle cx={wx} cy={y} r={5.5} fill={clustered ? '#f59e0b' : '#4a5568'} opacity="0.9" filter={clustered ? 'url(#glow)' : undefined}>
-                      <title>{w}</title>
-                    </circle>
-                  </g>
-                );
-              })}
-              {wallets.length > maxWallets && (
-                <text x={160 + maxWallets * 20 + 2} y={y + 3} fill="#64748b" fontSize="8.5" fontFamily="monospace">+{wallets.length - maxWallets}</text>
-              )}
+              {/* Main Node Circle */}
+              <circle
+                cx={n.x}
+                cy={n.y}
+                r={n.r}
+                fill={n.color}
+                filter="url(#nodeGlow)"
+                className="transition-transform duration-200"
+              />
+              {/* Inner dot */}
+              <circle cx={n.x} cy={n.y} r={n.r * 0.4} fill="#ffffff" opacity="0.8" />
+              {/* Micro text label */}
+              <text
+                x={n.x}
+                y={n.y + n.r + 8}
+                textAnchor="middle"
+                fill={isSelected ? '#ffffff' : '#94a3b8'}
+                fontSize={n.r >= 10 ? '7.5' : '6.5'}
+                fontFamily="monospace"
+                fontWeight="500"
+                className="pointer-events-none tracking-tight"
+              >
+                {short(n.address)}
+              </text>
             </g>
           );
         })}
       </svg>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 pt-2 border-t border-[#1e1735]/50 font-mono text-[9.5px] text-[#64748b]">
-        <span className="flex items-center gap-1.5"><span className="inline-block w-2 h-2 rounded-full bg-[#fb7185]" />deployer</span>
-        <span className="flex items-center gap-1.5"><span className="inline-block w-2 h-2 rounded-full bg-[#34d399]" />cex</span>
-        <span className="flex items-center gap-1.5"><span className="inline-block w-2 h-2 rounded-full bg-[#f59e0b]" />clustered</span>
-        <span className="ml-auto text-[#7a8599]">{parents.length} parents · {edges.length} links · {Math.round((uaim?.ownership?.clusterAdjustedConcentration ?? 0) * 100)}% share</span>
-        <SourceBadge value={source} />
+
+      {/* Cyber Network Stats Bar & Legend */}
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1.5 mt-1 pt-2 border-t border-[#1e1735]/60 font-mono text-[9px] text-[#64748b]">
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#fb7185]" />Deployer</span>
+          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#34d399]" />CEX</span>
+          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#f59e0b]" />Whale</span>
+          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#ff7a29]" />Cluster</span>
+        </div>
+        <div className="flex items-center gap-2 text-[#7a8599]">
+          <span>{graphNodes.length} nodes · {graphLinks.length} links</span>
+          <SourceBadge value={source} />
+        </div>
       </div>
     </div>
   );
@@ -376,8 +567,8 @@ function BehaviorVerdict({ uaim, meta }: { uaim: any; meta: any }) {
 }
 
 export function ScanReport({ uaim, trades, meta }: Props) {
-  // All collapsed by default, accordion opens one by one
-  const [openPanel, setOpenPanel] = useState<string | null>(null);
+  // Default opens 1 panel (Funding Graph), mutually exclusive accordion
+  const [openPanel, setOpenPanel] = useState<string | null>('graph');
   const toggle = (k: string) => setOpenPanel((prev) => (prev === k ? null : k));
   if (!uaim) return <p className="font-mono text-[11px] text-[#4a5568]">no data</p>;
   return (
