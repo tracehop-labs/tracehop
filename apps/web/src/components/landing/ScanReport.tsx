@@ -376,26 +376,22 @@ function BehaviorVerdict({ uaim, meta }: { uaim: any; meta: any }) {
 }
 
 export function ScanReport({ uaim, trades, meta }: Props) {
-  const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({
-    graph: true,
-    uniformity: true,
-    deployer: true,
-    behavior: true,
-  });
-  const toggle = (k: string) => setOpenPanels((prev) => ({ ...prev, [k]: !prev[k] }));
+  // All collapsed by default, accordion opens one by one
+  const [openPanel, setOpenPanel] = useState<string | null>(null);
+  const toggle = (k: string) => setOpenPanel((prev) => (prev === k ? null : k));
   if (!uaim) return <p className="font-mono text-[11px] text-[#4a5568]">no data</p>;
   return (
     <div className="shrink-0 grid gap-2.5 mt-3">
-      <Panel title="Funding relation graph" icon={Network} open={!!openPanels.graph} onToggle={() => toggle('graph')} accent="#f59e0b">
+      <Panel title="Funding relation graph" icon={Network} open={openPanel === 'graph'} onToggle={() => toggle('graph')} accent="#f59e0b">
         <FundingGraph uaim={uaim} source={meta.fundingSource} />
       </Panel>
-      <Panel title="Launch buy uniformity" icon={BarChart3} open={!!openPanels.uniformity} onToggle={() => toggle('uniformity')} accent="#10b981">
+      <Panel title="Launch buy uniformity" icon={BarChart3} open={openPanel === 'uniformity'} onToggle={() => toggle('uniformity')} accent="#10b981">
         <Uniformity uaim={uaim} trades={trades} source={meta.tradesSource} unit={meta.chain === 'evm' ? 'tokens' : 'SOL'} />
       </Panel>
-      <Panel title="Deployer profile history" icon={User} open={!!openPanels.deployer} onToggle={() => toggle('deployer')} accent="#7c3aed">
+      <Panel title="Deployer profile history" icon={User} open={openPanel === 'deployer'} onToggle={() => toggle('deployer')} accent="#7c3aed">
         <DeployerProfile uaim={uaim} creatorSource={meta.creatorSource} />
       </Panel>
-      <Panel title="Behavior analysis verdict" icon={Brain} open={!!openPanels.behavior} onToggle={() => toggle('behavior')} accent={uaim?.score?.verdict === 'CAP' ? '#f43f5e' : '#10b981'}>
+      <Panel title="Behavior analysis verdict" icon={Brain} open={openPanel === 'behavior'} onToggle={() => toggle('behavior')} accent={uaim?.score?.verdict === 'CAP' ? '#f43f5e' : '#10b981'}>
         <BehaviorVerdict uaim={uaim} meta={meta} />
       </Panel>
     </div>
