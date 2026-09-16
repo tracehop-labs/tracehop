@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, after } from 'next/server';
 import { handleScan } from '../../scan/route';
 import { supabase } from '../../../../../lib/supabase';
 import { checkTokenHold, HOLD_CONFIG } from '../../../../../lib/gating';
@@ -182,7 +182,7 @@ export async function POST(request: NextRequest) {
       return new Response(JSON.stringify({ ok: true }));
     }
 
-    // Scan command
+    // Scan command without args
     if (text === '/scan') {
       await sendTelegramMessage(chatId, 'Paste a token contract address (EVM 0x or Solana).');
       return new Response(JSON.stringify({ ok: true }));
@@ -194,17 +194,27 @@ export async function POST(request: NextRequest) {
       return new Response(JSON.stringify({ ok: true }));
     }
 
-    // Wallet command
+    // Wallet command without args
     if (text === '/wallet') {
       await sendTelegramMessage(chatId, '👛 <b>Wallet Analysis</b>\n\nPaste a wallet address (EVM 0x or Solana) to analyze its history and creator associations.');
       return new Response(JSON.stringify({ ok: true }));
     }
 
+    // Normalize command prefixes: /scan <addr> or /wallet <addr>
+    let candidateAddress = text;
+    let forceWalletCheck = false;
+    if (candidateAddress.startsWith('/scan ')) {
+      candidateAddress = candidateAddress.slice(6).trim();
+    } else if (candidateAddress.startsWith('/wallet ')) {
+      candidateAddress = candidateAddress.slice(8).trim();
+      forceWalletCheck = true;
+    }
+
     // 3. Check if text is a valid token address (Solana Base58 OR EVM 0x)
     const evmMintRegex = /^0x[0-9a-fA-F]{40}$/;
     const solMintRegex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
-    if (evmMintRegex.test(text) || solMintRegex.test(text)) {
-      const targetAddress = text;
+    if (evmMintRegex.test(candidateAddress) || solMintRegex.test(candidateAddress)) {
+      const targetAddress = candidateAddress;
 
       // Check if linked wallet
       const { data: dbSession } = await supabase
@@ -233,9 +243,9 @@ export async function POST(request: NextRequest) {
         return new Response(JSON.stringify({ ok: true }));
       }
 
-      // Determine isMint vs isWallet for Solana addresses only
-      let isMint = true;
-      if (!evmMintRegex.test(text)) {
+      // Determine isMint vs isWallet for Solana addresses
+      let isMint = !forceWalletCheck;
+      if (isMint && !evmMintRegex.test(targetAddress)) {
         try {
           const RPC_ENDPOINT = process.env.RPC_ENDPOINT || 'https://api.mainnet-beta.solana.com';
           const connection = new Connection(RPC_ENDPOINT);
@@ -247,56 +257,62 @@ export async function POST(request: NextRequest) {
         } catch { /* default: treat as token */ }
       }
 
-      // Wallet check (Solana only, different endpoint)
+      // Wallet check (run in after() so webhook returns immediately)
       if (!isMint) {
         await sendTelegramMessage(
           chatId,
           `👛 <b>Analyzing Wallet</b>\n\n<code>${targetAddress}</code>\nFetching reputation, history & clusters...`
         );
-        try {
-          const res = await fetch(`${appUrl}/api/v1/wallet/${targetAddress}`);
-          const data = await res.json();
-          if (data.error) {
-            await sendTelegramMessage(chatId, `❌ <b>Wallet Check Failed</b>\n${data.error}`);
-          } else {
-            const tagEmoji = data.tag === 'RUGGER' ? '🔴' : data.tag === 'CEX' ? '🔵' : '🟢';
-            const stats = data.stats || {};
-            const reply = `👛 <b>TraceHop Wallet Analysis</b>\n\n` +
-              `<b>Address</b>\n<code>${data.address}</code>\n\n` +
-              `<b>Entity</b> ${tagEmoji} <b>${data.tag}</b>\n` +
-              `<b>Trust Score</b> <b>${Math.round(data.trustScore * 100)}%</b>\n\n` +
-              `━━━━━━━━━━━━━━━━━━\n\n` +
-              `• Prior Launches: <b>${stats.priorLaunches || 0}</b>\n` +
-              `• Prior Rugs: <b>${stats.priorRugs || 0}</b>\n` +
-              `• Funded Snipers: <b>${stats.fundedSnipers || 0}</b>\n\n` +
-              `Powered by TraceHop Agent.`;
-            await sendTelegramMessage(chatId, reply);
+        after(async () => {
+          try {
+            const res = await fetch(`${appUrl}/api/v1/wallet/${targetAddress}`);
+            const data = await res.json();
+            if (data.error) {
+              await sendTelegramMessage(chatId, `❌ <b>Wallet Check Failed</b>\n${data.error}`);
+            } else {
+              const tagEmoji = data.tag === 'RUGGER' ? '🔴' : data.tag === 'CEX' ? '🔵' : '🟢';
+              const stats = data.stats || {};
+              const reply = `👛 <b>TraceHop Wallet Analysis</b>\n\n` +
+                `<b>Address</b>\n<code>${data.address}</code>\n\n` +
+                `<b>Entity</b> ${tagEmoji} <b>${data.tag}</b>\n` +
+                `<b>Trust Score</b> <b>${Math.round(data.trustScore * 100)}%</b>\n\n` +
+                `━━━━━━━━━━━━━━━━━━\n\n` +
+                `• Prior Launches: <b>${stats.priorLaunches || 0}</b>\n` +
+                `• Prior Rugs: <b>${stats.priorRugs || 0}</b>\n` +
+                `• Funded Snipers: <b>${stats.fundedSnipers || 0}</b>\n\n` +
+                `Powered by TraceHop Agent.`;
+              await sendTelegramMessage(chatId, reply);
+            }
+          } catch (err: any) {
+            await sendTelegramMessage(chatId, `❌ <b>Wallet Error</b>\n${err.message || err}`);
           }
-        } catch (err: any) {
-          await sendTelegramMessage(chatId, `❌ <b>Wallet Error</b>\n${err.message}`);
-        }
+        });
         return new Response(JSON.stringify({ ok: true }));
       }
 
-      // Token scan — unified path, same as landing page handleScan
+      // Token scan — send instant acknowledgment, execute scan inside after()
       await sendTelegramMessage(
         chatId,
-        `🔍 <b>Scanning...</b>\n\n<code>${targetAddress}</code>\n\nEst. 20–60 seconds.`
+        `🔍 <b>Scanning...</b>\n\n<code>${targetAddress}</code>\n\nAnalyzing initial trades & funding graph...`
       );
-      try {
-        const scanWallet = userWallet && /^0x[0-9a-fA-F]{40}$/.test(userWallet) ? userWallet : null;
-        const response = await handleScan(targetAddress, false, scanWallet, `tg_${chatId}`);
-        const result = await response.json();
 
-        if (result.error) {
-          await sendTelegramMessage(chatId, `❌ <b>Scan Failed</b>\n${result.message || result.error}`);
-          return new Response(JSON.stringify({ ok: true }));
+      after(async () => {
+        try {
+          const scanWallet = userWallet && /^0x[0-9a-fA-F]{40}$/.test(userWallet) ? userWallet : null;
+          const response = await handleScan(targetAddress, false, scanWallet, `tg_${chatId}`);
+          const result = await response.json();
+
+          if (result.error) {
+            await sendTelegramMessage(chatId, `❌ <b>Scan Failed</b>\n${result.message || result.error}`);
+            return;
+          }
+
+          await sendTelegramMessage(chatId, formatScanReport(targetAddress, result));
+        } catch (err: any) {
+          await sendTelegramMessage(chatId, `❌ <b>Scan Error</b>\n${err.message || err}`);
         }
+      });
 
-        await sendTelegramMessage(chatId, formatScanReport(targetAddress, result));
-      } catch (err: any) {
-        await sendTelegramMessage(chatId, `❌ <b>Scan Error</b>\n${err.message || err}`);
-      }
       return new Response(JSON.stringify({ ok: true }));
     }
 
