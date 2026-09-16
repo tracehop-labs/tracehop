@@ -567,8 +567,8 @@ function BehaviorVerdict({ uaim, meta }: { uaim: any; meta: any }) {
 }
 
 export function ScanReport({ uaim, trades, meta }: Props) {
-  // Default opens 1 panel (Funding Graph), mutually exclusive accordion
-  const [openPanel, setOpenPanel] = useState<string | null>('graph');
+  // Default opens 1 panel (Launch buy uniformity), mutually exclusive accordion
+  const [openPanel, setOpenPanel] = useState<string | null>('uniformity');
   const toggle = (k: string) => setOpenPanel((prev) => (prev === k ? null : k));
   if (!uaim) return <p className="font-mono text-[11px] text-[#4a5568]">no data</p>;
   return (
