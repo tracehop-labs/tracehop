@@ -14,8 +14,8 @@ export function WalletButton() {
   const [usdValue, setUsdValue] = useState<string>('0.00');
   const [symbol, setSymbol] = useState<string>('ETH');
   const [tokenBal, setTokenBal] = useState<string | null>(null);
-  const [tokenSymbol, setTokenSymbol] = useState<string>(
-    process.env.NEXT_PUBLIC_HOLD_TOKEN_SYMBOL || 'ARDRILL'
+  const [tokenSymbol, setTokenSymbol] = useState<string>(() =>
+    (process.env.NEXT_PUBLIC_HOLD_TOKEN_SYMBOL || 'ARDRILL').replace(/^\$+/, '')
   );
   const [tokenReq, setTokenReq] = useState<string>(() => {
     const v = Number(process.env.NEXT_PUBLIC_HOLD_THRESHOLD ?? NaN);

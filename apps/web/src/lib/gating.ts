@@ -37,7 +37,7 @@ export const HOLD_CONFIG = {
     return v;
   },
   get tokenSymbol(): string {
-    return process.env.HOLD_TOKEN_SYMBOL ?? 'ARDRILL';
+    return (process.env.HOLD_TOKEN_SYMBOL ?? 'ARDRILL').replace(/^\$+/, '');
   },
   get chainName(): string {
     return process.env.HOOD_CHAIN_NAME ?? 'Robinhood';

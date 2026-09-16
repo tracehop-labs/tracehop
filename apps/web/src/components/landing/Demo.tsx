@@ -45,8 +45,9 @@ interface PaywallData {
 // ponytail: threshold copy purely env-driven, server truth first
 const envThreshold = Number(process.env.NEXT_PUBLIC_HOLD_THRESHOLD ?? NaN);
 const envFreeTotal = Number(process.env.NEXT_PUBLIC_FREE_ANON_SCANS ?? NaN);
-const envTokenSymbol = process.env.NEXT_PUBLIC_HOLD_TOKEN_SYMBOL || 'ARDRILL';
+const envTokenSymbol = (process.env.NEXT_PUBLIC_HOLD_TOKEN_SYMBOL || 'ARDRILL').replace(/^\$+/, '');
 const envChainName = process.env.NEXT_PUBLIC_HOOD_CHAIN_NAME || 'Robinhood Chain';
+const symbolWithPrefix = (s?: string) => `$${(s || envTokenSymbol).replace(/^\$+/, '')}`;
 const fmtThreshold = (n?: number) => {
   const v = typeof n === 'number' && Number.isFinite(n) ? n : envThreshold;
   return Number.isFinite(v) ? v.toLocaleString('en-US') : '';
@@ -187,7 +188,7 @@ export function Demo({ registerScanner }: DemoProps) {
       if (res.status === 402) {
         let parsed: PaywallData = {
           error: 'ANON_EXHAUSTED',
-          message: `Free scans exhausted (${gateStatus?.anonUsed ?? 0}/${(gateStatus?.anonUsed ?? 0) + (gateStatus?.anonRemaining ?? 0)}). Connect an EVM wallet holding ${fmtThreshold(gateStatus?.required)}+ $${gateStatus?.symbol || envTokenSymbol} on ${gateStatus?.chain || envChainName} to continue scanning.`,
+          message: `Free scans exhausted (${gateStatus?.anonUsed ?? 0}/${(gateStatus?.anonUsed ?? 0) + (gateStatus?.anonRemaining ?? 0)}). Connect an EVM wallet holding ${fmtThreshold(gateStatus?.required)}+ ${symbolWithPrefix(gateStatus?.symbol)} on ${gateStatus?.chain || envChainName} to continue scanning.`,
           required: gateStatus?.required ?? envThreshold,
           current: '0',
           symbol: gateStatus?.symbol || envTokenSymbol,
@@ -453,7 +454,7 @@ export function Demo({ registerScanner }: DemoProps) {
               Interrogate <span className="text-[#a855f7] italic">any token.</span> Instantly.
             </h2>
             <p className="text-[#94a3b8] text-sm sm:text-base mb-6 leading-relaxed max-w-xl">
-              Paste a mint address. Tracehop will reveal what others try to hide. {gateStatus ? gateStatus.anonUsed + gateStatus.anonRemaining : (Number.isFinite(envFreeTotal) ? envFreeTotal : '')} free anonymous scans daily, or hold {fmtThreshold(gateStatus?.required)}+ ${gateStatus?.symbol ? `$${gateStatus.symbol}` : `$${envTokenSymbol}`} on {gateStatus?.chain || envChainName} for unlimited access.
+              Paste a mint address. Tracehop will reveal what others try to hide. {gateStatus ? gateStatus.anonUsed + gateStatus.anonRemaining : (Number.isFinite(envFreeTotal) ? envFreeTotal : '')} free anonymous scans daily, or hold {fmtThreshold(gateStatus?.required)}+ {symbolWithPrefix(gateStatus?.symbol)} on {gateStatus?.chain || envChainName} for unlimited access.
             </p>
 
             {/* Search Input Bar */}
@@ -634,9 +635,9 @@ export function Demo({ registerScanner }: DemoProps) {
 
                       <p className="text-[#cbd5e1] text-[11.5px] leading-relaxed mb-3">
                         {paywallData.error === 'ANON_EXHAUSTED' || paywallData.reason === 'anon_exhausted'
-                          ? `Free scans exhausted (${paywallData.used ?? gateStatus?.anonUsed ?? 0}/${paywallData.total ?? (gateStatus?.anonUsed ?? 0) + (gateStatus?.anonRemaining ?? 0)}). Connect an EVM wallet holding ${fmtThreshold(paywallData.required ?? gateStatus?.required)}+ $${paywallData.symbol ?? gateStatus?.symbol ?? envTokenSymbol} on ${paywallData.chain ?? gateStatus?.chain ?? envChainName} to continue scanning.`
+                          ? `Free scans exhausted (${paywallData.used ?? gateStatus?.anonUsed ?? 0}/${paywallData.total ?? (gateStatus?.anonUsed ?? 0) + (gateStatus?.anonRemaining ?? 0)}). Connect an EVM wallet holding ${fmtThreshold(paywallData.required ?? gateStatus?.required)}+ ${symbolWithPrefix(paywallData.symbol ?? gateStatus?.symbol)} on ${paywallData.chain ?? gateStatus?.chain ?? envChainName} to continue scanning.`
                           : paywallData.error === 'HOLD_REQUIRED' || paywallData.reason === 'insufficient_hold'
-                          ? `Insufficient $${paywallData.symbol ?? gateStatus?.symbol ?? envTokenSymbol} balance. Required: ${fmtThreshold(paywallData.required)}. Current: ${paywallData.current}.`
+                          ? `Insufficient ${symbolWithPrefix(paywallData.symbol ?? gateStatus?.symbol)} balance. Required: ${fmtThreshold(paywallData.required)}. Current: ${paywallData.current}.`
                           : paywallData.message}
                       </p>
 

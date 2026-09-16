@@ -5,7 +5,8 @@ import { Zap } from 'lucide-react';
 import { FaTelegramPlane } from 'react-icons/fa';
 
 const envThreshold = Number(process.env.NEXT_PUBLIC_HOLD_THRESHOLD ?? NaN);
-const envSymbol = process.env.NEXT_PUBLIC_HOLD_TOKEN_SYMBOL || 'ARDRILL';
+const envSymbol = (process.env.NEXT_PUBLIC_HOLD_TOKEN_SYMBOL || 'ARDRILL').replace(/^\$+/, '');
+const symbolWithPrefix = (s?: string) => `$${(s || envSymbol).replace(/^\$+/, '')}`;
 const envFreeTotal = Number(process.env.NEXT_PUBLIC_FREE_ANON_SCANS ?? 3);
 const fmtThreshold = () => Number.isFinite(envThreshold) ? envThreshold.toLocaleString('en-US') : '15,000';
 
@@ -162,7 +163,7 @@ export function Cta() {
 
             {/* Pricing strip: real gating, no surprises */}
             <div className="mb-8 font-mono text-[11px] sm:text-xs whitespace-nowrap">
-              <span className="px-4 py-1.5 rounded-lg bg-[#120d2b] border border-[#2e215c] text-[#c4b5fd]">{envFreeTotal} FREE SCANS → HOLD {fmtThreshold()}+ ${envSymbol} = UNLIMITED</span>
+              <span className="px-4 py-1.5 rounded-lg bg-[#120d2b] border border-[#2e215c] text-[#c4b5fd]">{envFreeTotal} FREE SCANS → HOLD {fmtThreshold()}+ {symbolWithPrefix(envSymbol)} = UNLIMITED</span>
             </div>
 
             {/* Action Buttons */}
