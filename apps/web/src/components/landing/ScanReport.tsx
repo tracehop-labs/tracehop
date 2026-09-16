@@ -83,23 +83,22 @@ function FundingGraph({ uaim, source }: { uaim: any; source?: string }) {
     }
   }
   const parents = [...groups.keys()];
-  const W = 340;
-  const topY = 32;
-  const rowH = 48;
-  const H = topY + 38 + parents.length * rowH + 8;
+  const W = 380;
+  const rowH = 44;
+  const H = Math.max(80, parents.length * rowH + 16);
   const colorOf = (addr: string): string => {
-    if (deployer && addr === deployer) return '#fb7185';
+    if (deployer && addr.toLowerCase() === deployer.toLowerCase()) return '#fb7185';
     if (typeOf.get(addr) === 'cex') return '#34d399';
     return '#f59e0b';
   };
   const labelOf = (addr: string): string => {
-    if (deployer && addr === deployer) return 'DEPLOYER';
+    if (deployer && addr.toLowerCase() === deployer.toLowerCase()) return 'DEPLOYER';
     if (typeOf.get(addr) === 'cex') return 'CEX';
     return 'PARENT';
   };
   return (
     <div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: Math.min(240, H) }}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: Math.min(300, H) }}>
         <defs>
           <filter id="glow">
             <feGaussianBlur stdDeviation="2" result="blur" />
@@ -108,29 +107,45 @@ function FundingGraph({ uaim, source }: { uaim: any; source?: string }) {
         </defs>
         {parents.map((p, pi) => {
           const wallets = groups.get(p)!;
-          const y = topY + 38 + pi * rowH + rowH / 2;
-          const px = 82;
+          const y = 22 + pi * rowH;
+          const px = 10;
+          const maxWallets = 8;
+          const shownWallets = wallets.slice(0, maxWallets);
+          const clustered = wallets.length > 1;
+          const endX = 160 + (shownWallets.length > 0 ? (shownWallets.length - 1) * 20 : 0);
           return (
             <g key={p}>
-              <line x1={px} y1={topY} x2={px} y2={y} stroke="#2a1e54" strokeWidth="1" strokeDasharray="4 4" opacity="0.6" />
-              <rect x={px - 66} y={topY - 15} width={132} height={30} rx={8} fill="#110d24" stroke={colorOf(p)} strokeOpacity="0.5" strokeWidth="0.8" />
-              <circle cx={px - 54} cy={topY} r={4.5} fill={colorOf(p)} filter="url(#glow)" />
-              <text x={px - 42} y={topY - 1} fill="#e2e8f0" fontSize="9.5" fontFamily="monospace" fontWeight="500">{short(p)}</text>
-              <text x={px - 42} y={topY + 10} fill={colorOf(p)} fontSize="8" fontFamily="monospace" opacity="0.9">{labelOf(p)} · {wallets.length}</text>
-              {wallets.slice(0, 8).map((w, wi) => {
-                const x = 160 + wi * 22;
-                const clustered = wallets.length > 1;
+              {/* Connector line between parent box and wallet cluster */}
+              {shownWallets.length > 0 && (
+                <line
+                  x1={px + 130}
+                  y1={y}
+                  x2={endX}
+                  y2={y}
+                  stroke={clustered ? '#f59e0b' : '#3b2d6e'}
+                  strokeWidth="1.2"
+                  strokeDasharray={clustered ? 'none' : '3 3'}
+                  opacity={clustered ? 0.7 : 0.4}
+                />
+              )}
+              {/* Parent badge */}
+              <rect x={px} y={y - 13} width={130} height={26} rx={7} fill="#110d24" stroke={colorOf(p)} strokeOpacity="0.6" strokeWidth="0.8" />
+              <circle cx={px + 10} cy={y} r={4} fill={colorOf(p)} filter="url(#glow)" />
+              <text x={px + 20} y={y - 1} fill="#e2e8f0" fontSize="9" fontFamily="monospace" fontWeight="600">{short(p)}</text>
+              <text x={px + 20} y={y + 8} fill={colorOf(p)} fontSize="7.5" fontFamily="monospace" opacity="0.9">{labelOf(p)} · {wallets.length} {wallets.length === 1 ? 'wallet' : 'wallets'}</text>
+              {/* Child wallet nodes */}
+              {shownWallets.map((w, wi) => {
+                const wx = 160 + wi * 20;
                 return (
                   <g key={w}>
-                    <line x1={px} y1={topY + 15} x2={x} y2={y - 6} stroke={clustered ? '#f59e0b' : '#3b2d6e'} strokeWidth="1" opacity={clustered ? 0.7 : 0.35} />
-                    <circle cx={x} cy={y} r={6} fill={clustered ? '#f59e0b' : '#4a5568'} opacity="0.85" filter={clustered ? 'url(#glow)' : undefined}>
+                    <circle cx={wx} cy={y} r={5.5} fill={clustered ? '#f59e0b' : '#4a5568'} opacity="0.9" filter={clustered ? 'url(#glow)' : undefined}>
                       <title>{w}</title>
                     </circle>
                   </g>
                 );
               })}
-              {wallets.length > 8 && (
-                <text x={160 + 8 * 22} y={y + 3} fill="#64748b" fontSize="9" fontFamily="monospace">+{wallets.length - 8}</text>
+              {wallets.length > maxWallets && (
+                <text x={160 + maxWallets * 20 + 2} y={y + 3} fill="#64748b" fontSize="8.5" fontFamily="monospace">+{wallets.length - maxWallets}</text>
               )}
             </g>
           );
@@ -361,21 +376,26 @@ function BehaviorVerdict({ uaim, meta }: { uaim: any; meta: any }) {
 }
 
 export function ScanReport({ uaim, trades, meta }: Props) {
-  const [openPanel, setOpenPanel] = useState<string | null>('behavior');
-  const toggle = (k: string) => setOpenPanel((prev) => (prev === k ? null : k));
+  const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({
+    graph: true,
+    uniformity: true,
+    deployer: true,
+    behavior: true,
+  });
+  const toggle = (k: string) => setOpenPanels((prev) => ({ ...prev, [k]: !prev[k] }));
   if (!uaim) return <p className="font-mono text-[11px] text-[#4a5568]">no data</p>;
   return (
-    <div className="shrink-0 grid gap-2 mt-3">
-      <Panel title="Funding relation graph" icon={Network} open={openPanel === 'graph'} onToggle={() => toggle('graph')} accent="#f59e0b">
+    <div className="shrink-0 grid gap-2.5 mt-3">
+      <Panel title="Funding relation graph" icon={Network} open={!!openPanels.graph} onToggle={() => toggle('graph')} accent="#f59e0b">
         <FundingGraph uaim={uaim} source={meta.fundingSource} />
       </Panel>
-      <Panel title="Launch buy uniformity" icon={BarChart3} open={openPanel === 'uniformity'} onToggle={() => toggle('uniformity')} accent="#10b981">
+      <Panel title="Launch buy uniformity" icon={BarChart3} open={!!openPanels.uniformity} onToggle={() => toggle('uniformity')} accent="#10b981">
         <Uniformity uaim={uaim} trades={trades} source={meta.tradesSource} unit={meta.chain === 'evm' ? 'tokens' : 'SOL'} />
       </Panel>
-      <Panel title="Deployer profile history" icon={User} open={openPanel === 'deployer'} onToggle={() => toggle('deployer')} accent="#7c3aed">
+      <Panel title="Deployer profile history" icon={User} open={!!openPanels.deployer} onToggle={() => toggle('deployer')} accent="#7c3aed">
         <DeployerProfile uaim={uaim} creatorSource={meta.creatorSource} />
       </Panel>
-      <Panel title="Behavior analysis verdict" icon={Brain} open={openPanel === 'behavior'} onToggle={() => toggle('behavior')} accent={uaim?.score?.verdict === 'CAP' ? '#f43f5e' : '#10b981'}>
+      <Panel title="Behavior analysis verdict" icon={Brain} open={!!openPanels.behavior} onToggle={() => toggle('behavior')} accent={uaim?.score?.verdict === 'CAP' ? '#f43f5e' : '#10b981'}>
         <BehaviorVerdict uaim={uaim} meta={meta} />
       </Panel>
     </div>

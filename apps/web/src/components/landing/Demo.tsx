@@ -75,6 +75,7 @@ const STAGES = [
 export function Demo({ registerScanner }: DemoProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
+  const reportRef = useRef<HTMLDivElement>(null);
   const [selectedToken, setSelectedToken] = useState<PresetToken>(PRESET_TOKENS[0]);
   const [inputMint, setInputMint] = useState('');
   const [hasScanned, setHasScanned] = useState(false);
@@ -270,6 +271,9 @@ export function Demo({ registerScanner }: DemoProps) {
             finished = true;
             try { playClick(); } catch { }
             fetchGateStatus(currentWallet);
+            setTimeout(() => {
+              reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
             break;
           } else if (ev === 'error') {
             throw new Error(data.message || data.error || 'Scan failed');
@@ -698,6 +702,18 @@ export function Demo({ registerScanner }: DemoProps) {
                       );
                     })}
                   </div>
+
+                  {/* Jump button to full report */}
+                  {showVerdict && liveResult && (
+                    <button
+                      type="button"
+                      onClick={() => reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                      className="w-full mt-2.5 py-2 px-3 rounded-xl bg-gradient-to-r from-[#7c3aed]/25 to-[#a855f7]/25 hover:from-[#7c3aed]/40 hover:to-[#a855f7]/40 border border-[#7c3aed]/40 text-[#c4b5fd] hover:text-white font-mono text-[11px] flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_0_15px_rgba(124,58,237,0.15)] shrink-0"
+                    >
+                      <span>📊 Detailed Forensic Graph & Analysis Generated Below</span>
+                      <span className="text-[#a855f7] font-bold">↓</span>
+                    </button>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -723,12 +739,14 @@ export function Demo({ registerScanner }: DemoProps) {
             const ring = 2 * Math.PI * 26;
             return (
               <motion.div
+                ref={reportRef}
+                id="scan-report"
                 key="scan-report"
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 24 }}
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                className="mt-10 rounded-2xl bg-[#090616] border border-[#241a45] p-5 sm:p-7 shadow-2xl font-mono text-xs grid gap-6 md:grid-cols-2"
+                className="mt-10 rounded-2xl bg-[#090616] border border-[#241a45] p-5 sm:p-7 shadow-2xl font-mono text-xs grid gap-6 md:grid-cols-2 scroll-mt-24"
               >
                 {/* Left: verdict hero */}
                 <div>
@@ -812,7 +830,7 @@ export function Demo({ registerScanner }: DemoProps) {
                 </div>
                 {/* Right: collapsible panels */}
                 <div>
-                  <ScanReport uaim={lr.uaim} trades={lr.trades ?? []} meta={lr.meta ?? { mint: selectedToken.mint, regime: 'REGIME W14' }} />
+                  <ScanReport uaim={lr.uaim || lr.uaim_document} trades={lr.trades ?? []} meta={lr.meta ?? { mint: selectedToken.mint, regime: 'REGIME W14' }} />
                 </div>
               </motion.div>
             );
