@@ -103,12 +103,12 @@ CLIP 4 — "DATA DEEP DIVE + FEATURE SET" (8 seconds)
 ================================================================================
 Covers: Script Scenes 7–8
 
-Visual: Quick scroll through Image 5 (Sniper Rings & Timing HUD) — background #120D2B, suspicious wallets highlighted in neon red #EF4444, gas origin headers on #171233 cards. Hit only: Coordinated Buyers (14 Wallets Same Second, 42% Supply), then Gas Overlap Summary (Shared CEX Funder) (0-4s). Transition to Image 6 (Verdict & Telegram Bot) — background #0A081E, massive holographic verdict badges stamping down: first warning "CAP — CABAL HAZARD" (#EF4444), then flipping to verified "NO CAP — 100% ORGANIC" in #10B981 next to the mobile Telegram Bot interface (4-8s).
+Visual: Quick scroll through Image 5 (Launch Buy Uniformity & Sniper Rings) — background #120D2B, suspicious wallets highlighted in neon red #EF4444, buy uniformity bar at 88%, same block counter flashing. Transition to Image 6 (Behavior Analysis Verdict) — background #0A081E, high-tech forensic card: ShieldAlert pulsing in rose-red with bold "THREAT" badge (88% confidence) and risk signals, 4 key metrics highlighted: Parent Share (42%), Fresh Wallets (78%), Insider Share (65%), then flipping to a verified token showing ShieldCheck in emerald green #10B981 with bold "SAFE" badge (96% confidence) (4-8s).
 
-On-screen text: "REAL FORENSICS." -> "EXPOSE CABALS." -> "NO CAP vs CAP."
+On-screen text: "BUY UNIFORMITY & CONCENTRATION." -> "INSTANT RISK CLASSIFICATION." -> "THREAT vs SAFE."
 
 VO:
-"Not just charts — real forensics: sniper rings, disguised relays, sybil clusters. One undeniable verdict: CAP... or NO CAP."
+"Deep forensic breakdown: buy uniformity, insider share, cluster concentration. One definitive verdict: THREAT... or SAFE."
 
 SFX/Music: Build intensifies here — this is the pre-climax section before the final clip.
 
@@ -137,7 +137,7 @@ CLIP MAP (quick reference)
 Clip 1 | 6s | Hook + Problem + Reveal | Image 1 | "Robinhood Chain moves 24/7. Thousands of tokens, zero clarity. Meet TRACEHOP."
 Clip 2 | 6s | Onboarding + Dashboard | Image 2, Image 3 | "No sign-up — just paste any contract, or scan free. Sub-second forensics for every Robinhood Chain token."
 Clip 3 | 6s | Query Demo | Image 4 | "Scan any launch. Trace multi-hop funding roots straight to the master wallet."
-Clip 4 | 8s | Data Deep Dive + Features | Image 5, Image 6 | "Not just charts — real forensics: sniper rings, disguised relays, sybil clusters. One undeniable verdict: CAP... or NO CAP."
+Clip 4 | 8s | Data Deep Dive + Features | Image 5, Image 6 | "Deep forensic breakdown: buy uniformity, insider share, cluster concentration. One definitive verdict: THREAT... or SAFE."
 Clip 5 | 4s | CTA + Brand Reveal | Image 1, Image 2 | "TRACEHOP. Robinhood Chain, decoded."
 Total: 30s
 

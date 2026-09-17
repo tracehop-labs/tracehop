@@ -1,7 +1,7 @@
 # 🎬 TRACEHOP — 30s PROMO, BROKEN INTO GENERATOR-READY CLIPS
 **Constraint:** video generator only accepts 4s / 6s / 8s / 10s per generation.  
 **Solution:** 5 clips → 6s + 6s + 6s + 8s + 4s = **30s total**, cut exactly on the scene boundaries from the 30s script.  
-**Visual rule:** every clip below only uses Image 1–6 (Image 1: TraceHop Radar Logo, Image 2: Welcome / Scanner Hero, Image 3: Live Scanner Terminal, Image 4: 3D Forensic Graph, Image 5: Coordinated Sniper Ring HUD, Image 6: NO CAP vs CAP Verdict + Telegram Bot). No new imagery, no redesign — same logo, same UI, same screenshots.  
+**Visual rule:** every clip below only uses Image 1–6 (Image 1: TraceHop Radar Logo, Image 2: Welcome / Scanner Hero, Image 3: Live Scanner Terminal, Image 4: 3D Forensic Graph, Image 5: Launch Buy Uniformity & Sniper Rings, Image 6: Behavior Analysis Verdict THREAT vs SAFE). No new imagery, no redesign — same logo, same UI, same screenshots.  
 **Voice rule:** copy the **VOICE PROFILE block** into every single clip prompt, word-for-word. This is what keeps the narrator sounding like the same person across 5 separate generations.
 
 ---
@@ -27,8 +27,8 @@ Backgrounds:
 --card: #171233 (glassmorphic card surfaces sitting on top of ink panels)
 
 Forensic status indicators:
---danger: #EF4444 (cabal alert, insider sniper cluster glow)
---safe: #10B981 (organic launch, NO CAP verified badge glow)
+--danger: #EF4444 (THREAT alert, ShieldAlert rose-red glow, high insider concentration)
+--safe: #10B981 (SAFE verified, ShieldCheck emerald green glow, organic launch)
 
 Text & UI structure:
 --gray-200: #E2E8F0 (primary titles, headlines)
@@ -100,12 +100,12 @@ Pitch/tone: same register throughout — do not let the voice sound younger/olde
 ## CLIP 4 — "DATA DEEP DIVE + FEATURE SET" (8 seconds)
 **Covers:** Script Scenes 7–8
 
-**Visual:** Quick scroll through **Image 5 (Sniper Rings & Timing HUD)** — background **#120D2B**, suspicious wallets highlighted in neon red **#EF4444**, gas origin headers on **#171233** cards. Hit only: Coordinated Buyers (14 Wallets Same Second, 42% Supply), then Gas Overlap Summary (Shared CEX Funder) (0-4s). Transition to **Image 6 (Verdict & Telegram Bot)** — background **#0A081E**, massive holographic verdict badges stamping down: first warning **"CAP — CABAL HAZARD"** (#EF4444), then flipping to verified **"NO CAP — 100% ORGANIC"** in **#10B981** next to the mobile Telegram Bot interface (4-8s).
+**Visual:** Quick scroll through **Image 5 (Launch Buy Uniformity & Sniper Rings)** — background **#120D2B**, suspicious wallets highlighted in neon red **#EF4444**, buy uniformity bar at 88%, same block counter flashing. Transition to **Image 6 (Behavior Analysis Verdict)** — background **#0A081E**, high-tech forensic card: `ShieldAlert` pulsing in rose-red with bold **"THREAT"** badge (88% confidence) and risk signals, 4 key metrics highlighted: Parent Share (42%), Fresh Wallets (78%), Insider Share (65%), then flipping to a verified token showing `ShieldCheck` in emerald green **#10B981** with bold **"SAFE"** badge (96% confidence) (4-8s).
 
-**On-screen text:** "REAL FORENSICS." → "EXPOSE CABALS." → "NO CAP vs CAP."
+**On-screen text:** "BUY UNIFORMITY & CONCENTRATION." → "INSTANT RISK CLASSIFICATION." → "THREAT vs SAFE."
 
 **VO:**
-> "Not just charts — real forensics: sniper rings, disguised relays, sybil clusters. One undeniable verdict: CAP... or NO CAP."
+> "Deep forensic breakdown: buy uniformity, insider share, cluster concentration. One definitive verdict: THREAT... or SAFE."
 
 **SFX/Music:** Build intensifies here — this is the pre-climax section before the final clip.
 
@@ -134,7 +134,7 @@ Pitch/tone: same register throughout — do not let the voice sound younger/olde
 | 1 | 6s | Hook + Problem + Reveal | Image 1 | "Robinhood Chain moves 24/7. Thousands of tokens, zero clarity. Meet TRACEHOP." |
 | 2 | 6s | Onboarding + Dashboard | Image 2, Image 3 | "No sign-up — just paste any contract, or scan free. Sub-second forensics for every Robinhood Chain token." |
 | 3 | 6s | Query Demo | Image 4 | "Scan any launch. Trace multi-hop funding roots straight to the master wallet." |
-| 4 | 8s | Data Deep Dive + Features | Image 5, Image 6 | "Not just charts — real forensics: sniper rings, disguised relays, sybil clusters. One undeniable verdict: CAP... or NO CAP." |
+| 4 | 8s | Data Deep Dive + Features | Image 5, Image 6 | "Deep forensic breakdown: buy uniformity, insider share, cluster concentration. One definitive verdict: THREAT... or SAFE." |
 | 5 | 4s | CTA + Brand Reveal | Image 1, Image 2 | "TRACEHOP. Robinhood Chain, decoded." |
 | **Total** | **30s** | | | |
 
