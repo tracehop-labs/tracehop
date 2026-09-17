@@ -19,9 +19,8 @@ SECTION 2: DEV KERJA
 1. Live Production Web URL:
    https://tracehop-web.vercel.app
 
-2. GitHub Repository (Organization):
+2. GitHub Repository:
    https://github.com/tracehop-labs/tracehop
-   Personal Backup (Untouched): https://github.com/sifaq00/tracehop
    Branch: main
    Latest Commit: e8602c9 / 15190cd (all synced and pushed)
 
