@@ -352,6 +352,37 @@ export default function PortfolioPage() {
               name = isThreat ? 'Flagged Token' : 'Audited Token';
             }
 
+            const feat = item.features || {};
+            const own = item.uaim_document?.ownership || {};
+
+            const parentShare =
+              feat.funding_parent_share != null
+                ? `${Math.round(feat.funding_parent_share * 100)}%`
+                : own.clusterAdjustedConcentration != null
+                ? `${Math.round(own.clusterAdjustedConcentration * 100)}%`
+                : item.metrics?.parentShare ?? (isThreat ? '68%' : '8%');
+
+            const freshWallets =
+              feat.fresh_wallet_ratio != null
+                ? `${Math.round(feat.fresh_wallet_ratio * 100)}%`
+                : own.freshWalletRatio != null
+                ? `${Math.round(own.freshWalletRatio * 100)}%`
+                : item.metrics?.freshWallets ?? (isThreat ? '82%' : '12%');
+
+            const insiderShare =
+              own.insiderShareEstimate != null
+                ? `${Math.round(own.insiderShareEstimate * 100)}%`
+                : feat.insider_share != null
+                ? `${Math.round(feat.insider_share * 100)}%`
+                : item.metrics?.insiderShare ?? (isThreat ? '55%' : '4%');
+
+            const holders =
+              typeof own.holderCount === 'number'
+                ? own.holderCount
+                : typeof item.metrics?.holders === 'number'
+                ? item.metrics.holders
+                : isThreat ? 42 : 1250;
+
             return {
               mint,
               symbol,
@@ -367,11 +398,11 @@ export default function PortfolioPage() {
                   severity: isThreat ? 'high' : 'low',
                 },
               ],
-              metrics: item.metrics || {
-                parentShare: isThreat ? '65%' : '14%',
-                freshWallets: isThreat ? '78%' : '18%',
-                insiderShare: isThreat ? '52%' : '9%',
-                holders: isThreat ? 54 : 920,
+              metrics: {
+                parentShare,
+                freshWallets,
+                insiderShare,
+                holders,
               },
               created_at: item.created_at || new Date().toISOString(),
             };
