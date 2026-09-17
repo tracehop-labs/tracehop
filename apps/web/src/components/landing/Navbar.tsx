@@ -52,7 +52,7 @@ export function Navbar() {
     };
 
     const handleResize = () => {
-      if (window.innerWidth >= 1024) {
+      if (window.innerWidth >= 1280) {
         setMobileMenuOpen(false);
       }
     };
@@ -203,7 +203,7 @@ export function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.24, ease: 'easeInOut' }}
-            className="lg:hidden border-b border-[#7c3aed]/30 bg-[#0c081e]/98 backdrop-blur-xl shadow-2xl overflow-hidden"
+            className="xl:hidden border-b border-[#7c3aed]/30 bg-[#0c081e]/98 backdrop-blur-xl shadow-2xl overflow-hidden"
           >
             <div className="px-5 py-4 space-y-1.5 max-w-md mx-auto">
               {NAV_LINKS.map((link) => {

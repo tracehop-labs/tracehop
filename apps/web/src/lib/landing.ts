@@ -169,7 +169,10 @@ let activeScrollAnimation: { stop: () => void } | null = null;
 export function scrollToSection(id: string) {
   if (typeof window === 'undefined') return;
 
-  // Use Lenis if initialized for smooth unified inertia
+  if (window.location.pathname !== '/') {
+    window.location.href = id === 'top' ? '/' : `/#${id}`;
+    return;
+  }
   const lenis = (window as unknown as { __lenis?: { scrollTo: (target: string | number | HTMLElement, options?: Record<string, unknown>) => void } }).__lenis;
   if (lenis) {
     if (id === 'top') {

@@ -20,7 +20,6 @@ SECTION 2: DEV KERJA
 2. GitHub Repository:
    https://github.com/tracehop-labs/tracehop
    Branch: main
-   Latest Commit: e8602c9 / 15190cd (all synced and pushed)
 
 3. Tech Stack & Architecture:
    - Framework: Next.js 16 (App Router) + React 19 + TypeScript 5
@@ -53,12 +52,12 @@ SECTION 3: QUALITY ASSURANCE (QA) REPORT
 
 [PASS] 3. End-to-End Application Flow:
    - Wallet Connect: Modal supports 7 native EVM / Robinhood Chain wallets (MetaMask, Rabby, OKX Wallet, Coinbase, Phantom EVM, Trust Wallet, and Bitget) with auto-chain add/switch to Robinhood Chain (Chain ID 46631).
-   - Hold-to-Access Gate: Verified live with operator wallet (0xCdbdc8...aE4B4EAfD8d holding 60k $ARDRILL).
+   - Hold-to-Access Gate: Verified live with operator wallet (0xCdbdc8...aE4B4EAfD8d holding 60k $TRCHP).
    - Instant Scanner: Contract paste -> SSE pipeline triggers -> 9 stages emit sequentially -> Full 4-panel report loads smoothly.
    - Telegram Webhook: Tested and active via `@tracehop_bot`.
 
 [PASS] 4. Animation & Performance:
-   - GPU-accelerated Framer Motion transitions (60 FPS smooth).
+   - GPU-accelerated Framer Motion transitions.
    - SVG Glow filters with feGaussianBlur for cyber radar nodes.
    - Fast initial page load (<1.2s TTFB on edge server).
 
@@ -73,14 +72,9 @@ SECTION 4: VIDEO & REPORT.MD
 --------------------------------------------------------------------------------
 
 A. VIDEO ASSETS
-1. Video Demo (Natural Walkthrough):
-   Status: [CREATED BY USER]
-   Link / File Location: [USER INSERT LINK / PATH HERE]
-
-2. Video Launch (Cinematic AI Teaser / Promo):
+1. Video Launch (Cinematic AI Teaser / Promo):
    Status: [CREATED BY USER]
    Prompt Source File: https://github.com/tracehop-labs/tracehop/blob/main/docs/promo-clips-robinhood-chain.txt
-   Link / File Location: [USER INSERT LINK / PATH HERE]
 
 
 B. PROJECT REPORT (REPORT.MD SPECIFICATION)
@@ -149,7 +143,6 @@ SECTION 5: VERIFIKASI (PRE-LAUNCH CHECKLIST)
     - Web Application: https://github.com/tracehop-labs/tracehop/tree/main/apps/web
     - Robinhood Chain Adapter: https://github.com/tracehop-labs/tracehop/tree/main/chains/robinhood
     - Project Report (report.md): https://github.com/tracehop-labs/tracehop/blob/main/docs/report.md
-    - Handover Package: https://github.com/tracehop-labs/tracehop/blob/main/docs/submission/submission_package.txt
     - README.md: https://github.com/tracehop-labs/tracehop/blob/main/README.md
 
 [x] 3. Template Chat Konfirmasi:
@@ -164,7 +157,6 @@ sudah selesai 100% dan siap untuk ditinjau / diluncurkan:
 - Project Report (report.md): https://github.com/tracehop-labs/tracehop/blob/main/docs/report.md
 - Official X: https://x.com/tracehopauto
 - Telegram Bot: @tracehop_bot
-- Full Handover Package: https://github.com/tracehop-labs/tracehop/blob/main/docs/submission/submission_package.txt
 
 "Ready to launch!"
 --------------------------------------------------------------------------------

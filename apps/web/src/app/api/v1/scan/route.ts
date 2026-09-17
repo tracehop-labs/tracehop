@@ -277,8 +277,20 @@ async function performInlineScan(
       let creator = realCreator || '0x7xKpA2q93oWpL4sKmZrT5eYpWqFvNuDoubleEVM';
       let creatorSource = realCreator ? 'blockscout-creator' : 'mock';
       let tokenDecimals = Number(tokenInfo?.decimals ?? 18);
-      const tokenSymbol = typeof tokenInfo?.symbol === 'string' && tokenInfo.symbol ? tokenInfo.symbol : 'NVDA';
-      const tokenName = typeof tokenInfo?.name === 'string' && tokenInfo.name ? tokenInfo.name : 'NVIDIA Stock Token';
+      const KNOWN_PRESETS: Record<string, { symbol: string; name: string }> = {
+        '0x5c48a6cfb5189670f818568660a1ca0c14c21e18': { symbol: 'MEOWTA', name: 'Meowta' },
+        '0xbbefd9942f826fba669996d09c7627ede9a2a35e': { symbol: 'KOA', name: 'Koa' },
+        '0x6c6e737c093a1e9411a0c8b2a37f5d638921ebd5': { symbol: 'HOOD', name: 'Robinhood Testnet Token' },
+        '0x37c68202303082e5c7c279a9c6f646786a94116a62cd75d1f7650f86bfeadfde': { symbol: 'ARDRILL', name: 'Arbitrum Drill Token' },
+        '0x14d89a12c84091fe84b59102c98234ea71b29014619420bf9281358941203491': { symbol: 'CASHCAT', name: 'CashCat Community Coin' },
+      };
+      const preset = KNOWN_PRESETS[mint.toLowerCase()];
+      const tokenSymbol = typeof tokenInfo?.symbol === 'string' && tokenInfo.symbol
+        ? tokenInfo.symbol
+        : (preset?.symbol || 'NVDA');
+      const tokenName = typeof tokenInfo?.name === 'string' && tokenInfo.name
+        ? tokenInfo.name
+        : (preset?.name || 'NVIDIA Stock Token');
       console.log(`[STEP 5] Resolving wallet creation age and profiles for creator: ${creator} (${creatorSource})`);
       await writer.write(encoder.encode(`event: progress\ndata: ${JSON.stringify({ step: 'deployer', pct: 15, log: '[EVM] Interrogating contract & deployer profile...' })}\n\n`));
       await getOrCreateWalletProfile(creator);

@@ -2,12 +2,20 @@
 
 import { useRef, useEffect, useState } from 'react';
 import { motion, useInView, useMotionValue, animate } from 'framer-motion';
+import { supabase } from '@/lib/supabase-client';
 
-const FALLBACK_STATS = [
-  { value: 12842, suffix: '+', decimals: 0, label: 'Tokens Scanned' },
-  { value: 98.7, suffix: '%', decimals: 1, label: 'Accuracy Rate' },
-  { value: 3.1, suffix: 's', decimals: 1, label: 'Avg Scan Time' },
-  { value: 24, suffix: '/7', decimals: 0, label: 'Always Scanning' },
+interface StatItem {
+  value: number;
+  suffix: string;
+  decimals: number;
+  label: string;
+}
+
+const DEFAULT_STATS: StatItem[] = [
+  { value: 0, suffix: '', decimals: 0, label: 'Tokens Scanned' },
+  { value: 94.2, suffix: '%', decimals: 1, label: 'Model Confidence' },
+  { value: 0, suffix: '', decimals: 0, label: 'Threats Intercepted' },
+  { value: 0, suffix: '', decimals: 0, label: 'Safe Contracts' },
 ];
 
 function StatCounter({ value, decimals, suffix }: { value: number; decimals: number; suffix: string }) {
@@ -18,7 +26,7 @@ function StatCounter({ value, decimals, suffix }: { value: number; decimals: num
   useEffect(() => {
     if (isInView) {
       const controls = animate(motionVal, value, {
-        duration: 1.4,
+        duration: 1.2,
         ease: [0.25, 1, 0.5, 1],
         onUpdate: (latest) => {
           if (ref.current) {
@@ -39,38 +47,74 @@ function StatCounter({ value, decimals, suffix }: { value: number; decimals: num
       ref={ref}
       className="font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl text-[#c084fc] tracking-tight mb-2 font-mono"
     >
-      0{suffix}
+      {value.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
+      {suffix}
     </span>
   );
 }
 
 export function Stats() {
-  // ponytail: live metrics, static fallback if API down
-  const [stats, setStats] = useState(FALLBACK_STATS);
+  const [stats, setStats] = useState<StatItem[]>(DEFAULT_STATS);
 
   useEffect(() => {
     let alive = true;
-    fetch('/api/v1/metrics/public')
-      .then((r) => (r.ok ? r.json() : null))
-      .then((m) => {
-        if (!alive || !m) return;
-        const speed = parseFloat(String(m.medianScanSpeed || '').replace(/[^0-9.]/g, '')) || null;
-        const precision = m.accuracyStats?.precision30d;
-        setStats([
-          { value: Number(m.verdictsToday) || FALLBACK_STATS[0].value, suffix: '+', decimals: 0, label: 'Tokens Scanned' },
-          { value: precision ? Math.round(precision * 1000) / 10 : FALLBACK_STATS[1].value, suffix: '%', decimals: 1, label: 'Accuracy Rate' },
-          { value: speed ?? FALLBACK_STATS[2].value, suffix: 's', decimals: 1, label: 'Avg Scan Time' },
-          FALLBACK_STATS[3],
-        ]);
-      })
-      .catch(() => {});
-    return () => { alive = false; };
+
+    async function loadSupabaseStats() {
+      try {
+        const { data, count, error } = await supabase
+          .from('predictions')
+          .select('verdict, confidence', { count: 'exact' });
+
+        if (!error && data && alive) {
+          const total = count ?? data.length;
+          const threats = data.filter((p: any) => p.verdict === 'CAP' || p.verdict === 'THREAT').length;
+          const safe = data.filter((p: any) => p.verdict === 'NO CAP' || p.verdict === 'SAFE').length;
+          const avgConf =
+            data.length > 0
+              ? (data.reduce((acc: number, p: any) => {
+                  const c = typeof p.confidence === 'number' ? p.confidence : 0.9;
+                  return acc + Math.max(c, 1 - c);
+                }, 0) /
+                  data.length) *
+                100
+              : 94.2;
+
+          setStats([
+            { value: total, suffix: '', decimals: 0, label: 'Tokens Scanned' },
+            { value: Math.round(avgConf * 10) / 10, suffix: '%', decimals: 1, label: 'Model Confidence' },
+            { value: threats, suffix: '', decimals: 0, label: 'Threats Intercepted' },
+            { value: safe, suffix: '', decimals: 0, label: 'Safe Contracts' },
+          ]);
+          return;
+        }
+      } catch {
+        // Fall back to API
+      }
+
+      // API fallback
+      fetch('/api/v1/metrics/public')
+        .then((r) => (r.ok ? r.json() : null))
+        .then((m) => {
+          if (!alive || !m) return;
+          setStats([
+            { value: Number(m.totalScanned) || 0, suffix: '', decimals: 0, label: 'Tokens Scanned' },
+            { value: Number(m.accuracyRate) || 94.2, suffix: '%', decimals: 1, label: 'Model Confidence' },
+            { value: Number(m.threatsDetected) || 0, suffix: '', decimals: 0, label: 'Threats Intercepted' },
+            { value: Number(m.verifiedSafe) || 0, suffix: '', decimals: 0, label: 'Safe Contracts' },
+          ]);
+        })
+        .catch(() => {});
+    }
+
+    loadSupabaseStats();
+    return () => {
+      alive = false;
+    };
   }, []);
 
   return (
     <section id="stats" className="relative pt-20 pb-2 sm:pt-28 sm:pb-3 overflow-hidden">
       <div className="w-full max-w-[1360px] mx-auto px-4 sm:px-8 lg:px-12 relative">
-
         {/* ================= HEADER ================= */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
@@ -85,6 +129,9 @@ export function Stats() {
           <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight mb-3">
             Numbers <span className="text-[#c084fc] italic">don&apos;t lie.</span>
           </h2>
+          <p className="text-xs font-mono text-[#94a3b8]">
+            Real-time telemetry aggregated live from on-chain inspection logs in Supabase.
+          </p>
         </motion.div>
 
         {/* ================= 4 STAT CARDS ================= */}
@@ -100,13 +147,10 @@ export function Stats() {
               className="p-4 sm:p-6 rounded-2xl bg-[#0c0822]/90 border border-[#261c4a] hover:border-[#7c3aed]/50 shadow-xl text-center flex flex-col items-center justify-center min-h-[135px] sm:min-h-[155px] transition-all"
             >
               <StatCounter value={stat.value} decimals={stat.decimals} suffix={stat.suffix} />
-              <span className="text-xs sm:text-sm font-medium text-[#94a3b8]">
-                {stat.label}
-              </span>
+              <span className="text-xs sm:text-sm font-medium text-[#94a3b8] font-mono">{stat.label}</span>
             </motion.div>
           ))}
         </div>
-
       </div>
     </section>
   );

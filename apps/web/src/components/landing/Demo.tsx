@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, RefreshCw, ShieldAlert, Wallet, Network, ArrowDown } from 'lucide-react';
+import { Zap, RefreshCw, ShieldAlert, ShieldCheck, AlertTriangle, Check, Lock, Activity, Wallet, Network, ArrowDown } from 'lucide-react';
 import { PRESET_TOKENS } from '@/lib/landing';
 import type { PresetToken } from '@/lib/landing';
 import { playClick } from '@/lib/sound-fx';
@@ -319,7 +319,7 @@ export function Demo({ registerScanner }: DemoProps) {
       if (gateStatus.tier === 2 || gateStatus.accessReason === 'holder') {
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 font-mono text-[10.5px] font-semibold text-emerald-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <ShieldCheck className="w-3 h-3 text-emerald-400 shrink-0" />
             <span>Holder: {gateStatus.formattedBalance || fmtThreshold(gateStatus.required) + '+'} {gateStatus.symbol || envTokenSymbol} (Active)</span>
           </span>
         );
@@ -327,7 +327,7 @@ export function Demo({ registerScanner }: DemoProps) {
       if (gateStatus.accessReason === 'invalid_wallet') {
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-rose-500/30 bg-rose-500/10 font-mono text-[10.5px] font-semibold text-rose-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+            <AlertTriangle className="w-3 h-3 text-rose-400 shrink-0" />
             <span>Invalid EVM Address</span>
           </span>
         );
@@ -338,7 +338,7 @@ export function Demo({ registerScanner }: DemoProps) {
           onClick={() => setIsWalletModalOpen(true)}
           className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-amber-500/30 bg-amber-500/10 font-mono text-[10.5px] font-semibold text-amber-300 hover:bg-amber-500/20 transition cursor-pointer"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+          <AlertTriangle className="w-3 h-3 text-amber-400 shrink-0" />
           <span>Balance: {gateStatus.formattedBalance || '0'} / {fmtThreshold(gateStatus.required)} {gateStatus.symbol || envTokenSymbol} (Need {shortThreshold(gateStatus.required)})</span>
         </button>
       );
@@ -348,9 +348,8 @@ export function Demo({ registerScanner }: DemoProps) {
     const total = (gateStatus?.anonUsed ?? 0) + (gateStatus?.anonRemaining ?? 3);
     if (remaining > 0) {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[#7c3aed]/30 bg-[#7c3aed]/15 font-mono text-[10.5px] font-medium text-[#c4b5fd]">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#a855f7]" />
-          <span>Free Anonymous Scans: {remaining}/{total} remaining</span>
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full border border-[#7c3aed]/30 bg-[#7c3aed]/15 font-mono text-[10.5px] font-medium text-[#c4b5fd]">
+          Free Anonymous Scans: {remaining}/{total} remaining
         </span>
       );
     }
@@ -361,7 +360,7 @@ export function Demo({ registerScanner }: DemoProps) {
         onClick={() => setIsWalletModalOpen(true)}
         className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-rose-500/30 bg-rose-500/10 font-mono text-[10.5px] font-semibold text-rose-400 hover:bg-rose-500/20 transition cursor-pointer"
       >
-        <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+        <Lock className="w-3 h-3 text-rose-400 shrink-0" />
         <span>Free Scans Exhausted ({total}/{total}) · Connect Wallet</span>
       </button>
     );
@@ -417,8 +416,12 @@ export function Demo({ registerScanner }: DemoProps) {
                     ? 'bg-rose-950/80 border-rose-500/50 shadow-[0_0_30px_rgba(244,63,94,0.3)]'
                     : 'bg-emerald-950/80 border-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.3)]'
                 }`}>
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className={`w-3 h-3 rounded-full ${liveResult.verdict === 'CAP' ? 'bg-rose-500 animate-pulse' : 'bg-emerald-500'}`} />
+                  <div className="flex items-center gap-2 mb-2">
+                    {liveResult.verdict === 'CAP' ? (
+                      <ShieldAlert className="w-4 h-4 text-rose-400 shrink-0" />
+                    ) : (
+                      <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                    )}
                     <span className={`font-display text-base font-black tracking-tight ${liveResult.verdict === 'CAP' ? 'text-rose-300' : 'text-emerald-300'}`}>
                       {liveResult.verdict === 'CAP' ? 'THREAT DETECTED' : 'CONTRACT VERIFIED'}
                     </span>
@@ -609,8 +612,20 @@ export function Demo({ registerScanner }: DemoProps) {
                 >
                   {/* Terminal header */}
                   <div className="shrink-0 flex items-center justify-between pb-3 mb-3 border-b border-[#241a45]">
-                    <div className="flex items-center gap-2.5">
-                      <span className={`w-2.5 h-2.5 rounded-full ${isScanning ? 'animate-pulse bg-[#a855f7]' : liveResult ? (liveResult.verdict === 'CAP' ? 'bg-rose-500' : 'bg-emerald-500') : selectedToken.type === 'SAFE' ? 'bg-emerald-500' : selectedToken.type === 'WARN' ? 'bg-amber-400' : 'bg-rose-500'}`} />
+                    <div className="flex items-center gap-2">
+                      {isScanning ? (
+                        <Activity className="w-3.5 h-3.5 text-[#a855f7] animate-pulse shrink-0" />
+                      ) : liveResult ? (
+                        liveResult.verdict === 'CAP' ? (
+                          <ShieldAlert className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                        ) : (
+                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                        )
+                      ) : selectedToken.type === 'SAFE' ? (
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      ) : (
+                        <ShieldAlert className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                      )}
                       <span className="font-bold text-white uppercase tracking-wide">{selectedToken.name}</span>
                       <span className="font-mono text-[#94a3b8] text-[11px]">({selectedToken.ticker})</span>
                     </div>
@@ -795,7 +810,13 @@ export function Demo({ registerScanner }: DemoProps) {
                           : r.severity === 'medium' ? 'bg-amber-500/5 border-amber-500/15 text-amber-300'
                           : 'bg-[#0c0a1a] border-[#1e1735]/60 text-[#7a8599]'
                         }`}>
-                          <span className="w-1.5 h-1.5 rounded-full shrink-0 mt-1 bg-current" />
+                          {r.severity === 'high' ? (
+                            <AlertTriangle className="w-3 h-3 text-rose-400 shrink-0 mt-0.5" />
+                          ) : r.severity === 'medium' ? (
+                            <AlertTriangle className="w-3 h-3 text-amber-400 shrink-0 mt-0.5" />
+                          ) : (
+                            <Check className="w-3 h-3 text-emerald-400 shrink-0 mt-0.5" />
+                          )}
                           <span className="leading-relaxed">{r.text}</span>
                         </div>
                       ))}

@@ -2,7 +2,7 @@
 'use client';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Shield, ShieldAlert, ShieldCheck, Network, BarChart3, User, Brain } from 'lucide-react';
+import { ChevronDown, Shield, ShieldAlert, ShieldCheck, Network, BarChart3, User, Brain, AlertTriangle, Check } from 'lucide-react';
 
 export interface TradePoint { trader: string; solAmount: number; slot: number; }
 interface Props {
@@ -531,7 +531,13 @@ function BehaviorVerdict({ uaim, meta }: { uaim: any; meta: any }) {
                 : 'bg-[#110d24] border-[#1e1735] text-[#7a8599]'
               }`}
             >
-              <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-current" />
+              {r.severity === 'high' ? (
+                <AlertTriangle className="w-3 h-3 text-rose-400 shrink-0" />
+              ) : r.severity === 'medium' ? (
+                <AlertTriangle className="w-3 h-3 text-amber-400 shrink-0" />
+              ) : (
+                <Check className="w-3 h-3 text-emerald-400 shrink-0" />
+              )}
               <span className="font-semibold">{r.code}</span>
               <span className="flex-1 text-[9px] opacity-70">{r.evidence?.slice(0, 80) ?? ''}</span>
               <span className="opacity-50">{Math.round((r.confidence ?? 0) * 100)}%</span>

@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import {
   Crosshair, Users, Network, Layers, ShieldAlert, Lock,
-  FileCheck, UserCheck, History, Shield,
+  FileCheck, UserCheck, History, Shield, Radio,
 } from 'lucide-react';
 
 const STEPS = [
@@ -464,7 +464,7 @@ export function Engine() {
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-gradient-to-r from-[#7c3aed] to-[#6d28d9] text-white font-bold text-[10px] uppercase tracking-wider select-none shrink-0 shadow-[0_0_12px_rgba(168,85,247,0.55)]"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <Radio className="w-3 h-3 text-emerald-400 animate-pulse" />
               <span>LIVE SCAN</span>
             </motion.div>
 
