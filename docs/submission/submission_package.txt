@@ -56,7 +56,7 @@ SECTION 3: QUALITY ASSURANCE (QA) REPORT
    - Mobile (iPhone / Android 375px - 430px): 100% single-column layout, touch-friendly accordion panels, auto-truncated wallet hashes ("0x37c6...dfde").
 
 [PASS] 3. End-to-End Application Flow:
-   - Wallet Connect: Modal supports OKX Wallet, MetaMask, Coinbase, and WalletConnect.
+   - Wallet Connect: Modal supports 7 native EVM / Robinhood Chain wallets (MetaMask, Rabby, OKX Wallet, Coinbase, Phantom EVM, Trust Wallet, and Bitget) with auto-chain add/switch to Robinhood Chain (Chain ID 46631).
    - Hold-to-Access Gate: Verified live with operator wallet (0xCdbdc8...aE4B4EAfD8d holding 60k $ARDRILL).
    - Instant Scanner: Contract paste -> SSE pipeline triggers -> 9 stages emit sequentially -> Full 4-panel report loads smoothly.
    - Telegram Webhook: Tested and active via `@tracehop_bot`.
