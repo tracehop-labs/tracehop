@@ -111,20 +111,20 @@ Pitch/tone: same register throughout — do not let the voice sound younger/olde
 
 ---
 
-## CLIP 5 — "CTA + BRAND REVEAL" (4 seconds)
-**Covers:** Script Scene 9
+## CLIP 5 — "CYBER SHIELD LOCKUP & PUNCHLINE" (4 seconds)
+**Covers:** Script Scene 9 (Final Climax & Brand Lockup)
 
-**Visual:** Cut back to the logo (**Image 1**) full-screen on **#0A0A0A** with a pulsing **#CCFF00** glow, edge highlight **#B8E600**, deep shadow falloff in **#4A6600** (0-2s). Quick settle into **Image 2** (welcome screen) as the loop-back (2-3s), then fade to the URL card — text in **#FFFFFF**, underline in **#CCFF00** (3-4s).
+**Visual:** Cinematic transition from the safe scan into a sweeping 3D holographic security shield forming around the central token. Constellation lines collapse into an impenetrable hexagonal barrier glowing in electric chartreuse **#CCFF00** and deep cyber-violet **#7C3AED** (0-2s). Camera snaps cleanly to the central **TRACEHOP** radar emblem pulsing with high-voltage energy over deep void **#0A081E**, flanked by the Robinhood Chain feather emblem (2-4s).
 
-**On-screen text (final, large):**
-> **tracehop.site**  
-> *X: @tracehopauto · Telegram: @tracehop_bot*  
-> *Free to scan — Robinhood Chain ready.*
+**On-screen text (final, bold & cinematic):**
+> **SCREEN THE CREATOR.**  
+> **EXPOSE THE CABAL.**  
+> **TRACEHOP — KNOW BEFORE YOU APE.**
 
 **VO:**
-> "TRACEHOP. Robinhood Chain, decoded."
+> "Screen the creator. Expose the cabal. TRACEHOP: Know before you ape."
 
-**SFX/Music:** Cinematic impact exactly on "TRACEHOP" (landing around second 2), then music fades to one final clean "ping" at the very end.
+**SFX/Music:** Heavy cinematic sub-bass impact landing on "TRACEHOP" (second 2), trailing into a reverberating digital sonar ping fading into silence.
 
 ---
 
@@ -135,7 +135,7 @@ Pitch/tone: same register throughout — do not let the voice sound younger/olde
 | 2 | 6s | Onboarding + Dashboard | Image 2, Image 3 | "No sign-up — just paste any contract, or scan free. Sub-second forensics for every Robinhood Chain token." |
 | 3 | 6s | Query Demo | Image 4 | "Scan any launch. Trace multi-hop funding roots straight to the master wallet." |
 | 4 | 8s | Data Deep Dive + Features | Image 5, Image 6 | "Deep forensic breakdown: buy uniformity, insider share, cluster concentration. One definitive verdict: THREAT... or SAFE." |
-| 5 | 4s | CTA + Brand Reveal | Image 1, Image 2 | "TRACEHOP. Robinhood Chain, decoded." |
+| 5 | 4s | Cyber Shield & Punchline | Image 1, Image 2 | "Screen the creator. Expose the cabal. TRACEHOP: Know before you ape." |
 | **Total** | **30s** | | | |
 
 ---
