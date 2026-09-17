@@ -82,7 +82,7 @@ export function Footer() {
                 <FaXTwitter className="w-3 h-3" />
               </a>
               <a
-                href="https://github.com/sifaq00/tracehop"
+                href="https://github.com/tracehop-labs/tracehop"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub"

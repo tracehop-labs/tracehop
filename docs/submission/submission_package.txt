@@ -10,7 +10,7 @@ SECTION 1: BRIEF
 Status: Completed
 - Dev-brief: Conceptualized and implemented directly into system architecture.
 - Web Assets: Official Robinhood Chain black feather on electric chartreuse (#CCFF00) branding, dark cyber UI (#0A081E).
-- Repository: https://github.com/sifaq00/tracehop
+- Repository: https://github.com/tracehop-labs/tracehop
 
 
 --------------------------------------------------------------------------------
@@ -19,8 +19,9 @@ SECTION 2: DEV KERJA
 1. Live Production Web URL:
    https://tracehop.site
 
-2. GitHub Repository:
-   https://github.com/sifaq00/tracehop
+2. GitHub Repository (Organization):
+   https://github.com/tracehop-labs/tracehop
+   Personal Backup (Untouched): https://github.com/sifaq00/tracehop
    Branch: main
    Latest Commit: e8602c9 / 15190cd (all synced and pushed)
 
@@ -163,7 +164,7 @@ Proyek TRACEHOP (Autonomous Multi-Chain Wallet Intelligence & Forensic Graph Lay
 sudah selesai 100% dan siap untuk ditinjau / diluncurkan:
 
 - Web Live: https://tracehop.site
-- GitHub Repo: https://github.com/sifaq00/tracehop
+- GitHub Repo: https://github.com/tracehop-labs/tracehop
 - Official X: https://x.com/tracehopauto
 - Telegram Bot: @tracehop_bot
 - Full Handover Package: docs/submission/submission_package.txt

@@ -137,7 +137,7 @@ tracehop/
 
 ### 1. Clone & Install Dependencies
 ```bash
-git clone https://github.com/sifaq00/tracehop.git
+git clone https://github.com/tracehop-labs/tracehop.git
 cd tracehop
 pnpm install
 ```
