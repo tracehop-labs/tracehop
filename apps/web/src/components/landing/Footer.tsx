@@ -108,7 +108,7 @@ export function Footer() {
               className="inline-flex items-center gap-2 py-2 px-3.5 rounded-xl bg-[#0e0a22] hover:bg-[#181138] border border-[#251c47] hover:border-[#7c3aed]/50 text-white text-xs font-medium transition-all w-fit"
             >
               <FaTelegramPlane className="w-3.5 h-3.5 text-[#2AABEE] shrink-0" />
-              <span>Telegram Bot (@tracehop_bot)</span>
+              <span>Telegram Bot</span>
             </a>
             <a
               href="https://x.com/tracehopauto"
@@ -117,7 +117,7 @@ export function Footer() {
               className="inline-flex items-center gap-2 py-2 px-3.5 rounded-xl bg-[#0e0a22] hover:bg-[#181138] border border-[#251c47] hover:border-[#7c3aed]/50 text-white text-xs font-medium transition-all w-fit"
             >
               <FaXTwitter className="w-3.5 h-3.5 text-white shrink-0" />
-              <span>Follow @tracehopauto</span>
+              <span>Follow on X</span>
             </a>
           </div>
 
