@@ -96,7 +96,6 @@ export function Footer() {
             <h5 className="font-bold text-white font-mono text-xs uppercase tracking-wider mb-1">RESOURCES</h5>
             <a href="/portfolio" className="hover:text-white transition-colors text-xs py-0.5">Portfolio</a>
             <a href="https://t.me/tracehop_bot" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-xs py-0.5">Telegram Bot</a>
-            <a href="https://github.com/tracehop-labs/tracehop" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-xs py-0.5">Documentation</a>
           </div>
 
           {/* Join the Movement */}
