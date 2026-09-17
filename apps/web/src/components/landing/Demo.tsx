@@ -296,20 +296,12 @@ export function Demo({ registerScanner }: DemoProps) {
   useEffect(() => {
     registerScanner(handleStartScan);
 
-    // Auto-load token if arrived with ?mint= (e.g. from Portfolio "Inspect in Graph Terminal")
+    // Pre-fill input if arrived with ?mint= (e.g. from Portfolio "Inspect in Graph Terminal")
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const urlMint = params.get('mint');
       if (urlMint) {
         setInputMint(urlMint);
-        setTimeout(() => {
-          handleStartScan({
-            ...PRESET_TOKENS[0],
-            name: 'Scanned Target',
-            ticker: urlMint.slice(0, 4) + '...' + urlMint.slice(-4),
-            mint: urlMint,
-          });
-        }, 400);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
