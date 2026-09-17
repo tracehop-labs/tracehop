@@ -25,9 +25,34 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://tracehop-web.vercel.app'),
   title: 'TraceHop · Know before you ape',
-  description: 'Real-time multi-chain wallet intelligence layer. Trace funding graphs and detect rugs before you ape.',
+  description: 'Autonomous Multi-Chain Wallet Intelligence & Forensic Graph Layer for Web3 Token Launches. Screen the creator, trace the funding graph, and detect insider clusters.',
   icons: { icon: '/assets/rabbit-minimal.webp' },
+  openGraph: {
+    title: 'TraceHop · Know before you ape',
+    description: 'Autonomous multi-chain wallet intelligence and forensic graph platform for Robinhood Chain & EVM.',
+    url: 'https://tracehop-web.vercel.app',
+    siteName: 'TraceHop',
+    images: [
+      {
+        url: '/assets/tracehop-banner.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'TraceHop Forensic Graph Layer',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'TraceHop · Autonomous Wallet Intelligence',
+    description: 'Screen the creator. Trace the funding graph. Expose insider clusters before you ape.',
+    site: '@tracehopauto',
+    creator: '@tracehopauto',
+    images: ['/assets/tracehop-banner.jpg'],
+  },
 };
 
 export default function RootLayout({
