@@ -100,25 +100,25 @@ export function Footer() {
           </div>
 
           {/* Join the Movement */}
-          <div className="col-span-2 sm:col-span-2 md:col-span-3 flex flex-col gap-2.5">
+          <div className="col-span-2 sm:col-span-2 md:col-span-3 flex flex-col items-start gap-2.5">
             <h5 className="font-bold text-white font-mono text-xs uppercase tracking-wider mb-1">CONNECT &amp; COMMUNITY</h5>
             <a
               href="https://t.me/tracehop_bot"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 py-2 px-3.5 rounded-xl bg-[#0e0a22] hover:bg-[#181138] border border-[#251c47] hover:border-[#7c3aed]/50 text-white text-xs font-medium transition-all"
+              className="inline-flex items-center gap-2 py-2 px-3.5 rounded-xl bg-[#0e0a22] hover:bg-[#181138] border border-[#251c47] hover:border-[#7c3aed]/50 text-white text-xs font-medium transition-all w-fit"
             >
               <FaTelegramPlane className="w-3.5 h-3.5 text-[#2AABEE] shrink-0" />
-              <span>Telegram Bot</span>
+              <span>Telegram Bot (@tracehop_bot)</span>
             </a>
             <a
               href="https://x.com/tracehopauto"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 py-2 px-3.5 rounded-xl bg-[#0e0a22] hover:bg-[#181138] border border-[#251c47] hover:border-[#7c3aed]/50 text-white text-xs font-medium transition-all"
+              className="inline-flex items-center gap-2 py-2 px-3.5 rounded-xl bg-[#0e0a22] hover:bg-[#181138] border border-[#251c47] hover:border-[#7c3aed]/50 text-white text-xs font-medium transition-all w-fit"
             >
               <FaXTwitter className="w-3.5 h-3.5 text-white shrink-0" />
-              <span>Follow on X</span>
+              <span>Follow @tracehopauto</span>
             </a>
           </div>
 
