@@ -1,0 +1,161 @@
+# TRACEHOP — 30s PROMO, BROKEN INTO GENERATOR-READY CLIPS
+Constraint: video generator only accepts 4s / 6s / 8s / 10s per generation.
+Solution: 5 clips -> 6s + 6s + 6s + 8s + 4s = 30s total, cut exactly on the scene boundaries from the 30s script.
+Visual rule: every clip below only uses Image 1–6 (Image 1: TraceHop Radar Logo, Image 2: Welcome / Scanner Hero, Image 3: Live Scanner Terminal, Image 4: 3D Forensic Graph, Image 5: Coordinated Sniper Ring HUD, Image 6: NO CAP vs CAP Verdict + Telegram Bot). No new imagery, no redesign — same logo, same UI, same screenshots.
+Voice rule: copy the VOICE PROFILE block into every single clip prompt, word-for-word. This is what keeps the narrator sounding like the same person across 5 separate generations.
+
+================================================================================
+COLOR PALETTE (paste into every clip prompt, unchanged)
+================================================================================
+
+COLOR PALETTE — use these exact hex values across all clips, no substitutions:
+
+Primary accent (glow, highlights, Robinhood Chain badge, active graph nodes):
+--chartreuse: #CCFF00 (official Robinhood Chain electric chartreuse)
+--chartreuse-2: #B8E600 (secondary/hover state of the chartreuse accent)
+
+Deep accent (shadow side of the chartreuse glow, olive undertone in node clusters):
+--olive: #4A6600
+
+Secondary accent (scan telemetry, parent funding hop lines, laser beams):
+--orange: #FF7A29 (TraceHop ember orange)
+--violet: #7C3AED (radar waves, glassmorphic card edges)
+
+Backgrounds:
+--black: #0A081E (deepest cyber void background, used in Scene/Clip 1 dark reveal and final brand reveal)
+--ink: #120D2B (near-black panels, card backgrounds in forensic inspector)
+--card: #171233 (glassmorphic card surfaces sitting on top of ink panels)
+
+Forensic status indicators:
+--danger: #EF4444 (cabal alert, insider sniper cluster glow)
+--safe: #10B981 (organic launch, NO CAP verified badge glow)
+
+Text & UI structure:
+--gray-200: #E2E8F0 (primary titles, headlines)
+--gray-400: #94A3B8 (wallet hashes, metadata, timestamps)
+--border: #2C2054 (hairline borders, glass dividers)
+
+Rule: the chartreuse (#CCFF00) and orange (#FF7A29) are the ONLY accent colors allowed to glow — they should behave like laser light bouncing off dark cyber surfaces, blooming softly against #0A081E in dark scenes. Never introduce a different green, teal, or neon color. Olive (#4A6600) is used for depth/shadow gradients under the chartreuse glow, not as a standalone highlight color. UI moments (scanner, graphs, forensic tables) should sit on --black/--ink/--card tones, preserving an institutional, cyber-forensics dark terminal aesthetic.
+
+
+================================================================================
+VOICE PROFILE (paste into every clip prompt, unchanged)
+================================================================================
+
+VOICE PROFILE — use identically across all clips:
+Deep male voice. Calm, intelligent, authoritative.
+Premium tech-advertisement delivery. Natural American English. Clear pronunciation. Slightly mysterious undertone.
+Pace: brisk, minimal pauses between sentences, consistent energy — do not slow down or speed up between clips.
+Pitch/tone: same register throughout — do not let the voice sound younger/older or more casual/formal in later clips.
+
+Extra consistency tip: if the platform lets you upload a reference voice/audio sample, generate Clip 1's voice first, then feed that same audio sample as the voice reference into Clips 2–5. If it only takes a text description, always paste the VOICE PROFILE block exactly as written above — do not paraphrase it differently per clip.
+
+Music continuity tip: keep the same BPM and key across all 5 clips (suggest: dark cyber synth, ~90–95 BPM, minor key) so they cut together smoothly. Only the intensity/build should change per clip as noted below.
+
+
+================================================================================
+CLIP 1 — "HOOK + PROBLEM + REVEAL" (6 seconds)
+================================================================================
+Covers: Script Scenes 1–3
+
+Visual: Full screen in #0A081E -> neon chartreuse lines in #CCFF00 ripple into a 3D radar topography (Image 1 — radar logo), quick zoom into the core emblem, glow falling off through #4A6600 shadow tones. At 3s, cut to a fast flicker montage (red/green candlesticks, "FUD"/"SNIPERS?"/"CABAL?" flashing in #EF4444) — 1.5s only. Then chaos freezes and gets sucked back into the logo (Image 1 again), which fills the screen with a #CCFF00 glow (highlight edge in #B8E600, outer rim in #7C3AED) at the very end.
+
+On-screen text: "ROBINHOOD CHAIN MOVES 24/7." -> (flash) "WHO OWNS THE SUPPLY?" -> TRACEHOP — ON-CHAIN INTELLIGENCE
+
+VO (read fast, fits 6s):
+"Robinhood Chain moves 24/7. Thousands of tokens, zero clarity. Meet TRACEHOP."
+
+SFX/Music: Start with a soft atmospheric pulse (0-3s), sharp cinematic drop exactly as the logo fills the screen (3-6s).
+
+
+================================================================================
+CLIP 2 — "ONBOARDING + DASHBOARD" (6 seconds)
+================================================================================
+Covers: Script Scenes 4–5
+
+Visual: Open on Image 2 (Welcome to TRACEHOP) — background stays #0A081E, flash-highlight "Robinhood Chain" selector pill with a glowing #CCFF00 border and contract input box (0-3s). Smooth transition to Image 3 (TRACEHOP live scanner) — dark surface in #120D2B, inspector cards in #171233, hairline dividers in #2C2054 — quick pan from the telemetry sidebar to the center headline "Scan Any Robinhood Chain Token" with real-time SSE data streaming in (3-6s).
+
+On-screen text: "ZERO SIGN-UP." -> "ALL ROBINHOOD CHAIN DATA. ONE SCAN."
+
+VO:
+"No sign-up — just paste any contract, or scan free. Sub-second forensics for every Robinhood Chain token."
+
+SFX/Music: Soft electronic pulse continues from Clip 1's energy level — do not reset to silence.
+
+
+================================================================================
+CLIP 3 — "REAL-TIME QUERY DEMO" (6 seconds)
+================================================================================
+Covers: Script Scene 6
+
+Visual: Cut to Image 4 (Forensic Graph) — background #0A081E, center token node in #CCFF00, funding relay lines in #FF7A29 with #2C2054 grid borders. Animate the forensic trace firing: contract address submits -> hit scan -> the graph expands smoothly in 3D, reverse-tracing 3 intermediary hops ($WALLET_1 -> $RELAY_2 -> $PARENT_ROOT) populating node by node at a brisk pace, root exchange vault tinted #B8E600.
+
+On-screen text: (none needed — let the UI carry it)
+
+VO:
+"Scan any launch. Trace multi-hop funding roots straight to the master wallet."
+
+SFX: A crisp digital "lock" ping sound as each funding node appears, timed to the VO.
+
+
+================================================================================
+CLIP 4 — "DATA DEEP DIVE + FEATURE SET" (8 seconds)
+================================================================================
+Covers: Script Scenes 7–8
+
+Visual: Quick scroll through Image 5 (Sniper Rings & Timing HUD) — background #120D2B, suspicious wallets highlighted in neon red #EF4444, gas origin headers on #171233 cards. Hit only: Coordinated Buyers (14 Wallets Same Second, 42% Supply), then Gas Overlap Summary (Shared CEX Funder) (0-4s). Transition to Image 6 (Verdict & Telegram Bot) — background #0A081E, massive holographic verdict badges stamping down: first warning "CAP — CABAL HAZARD" (#EF4444), then flipping to verified "NO CAP — 100% ORGANIC" in #10B981 next to the mobile Telegram Bot interface (4-8s).
+
+On-screen text: "REAL FORENSICS." -> "EXPOSE CABALS." -> "NO CAP vs CAP."
+
+VO:
+"Not just charts — real forensics: sniper rings, disguised relays, sybil clusters. One undeniable verdict: CAP... or NO CAP."
+
+SFX/Music: Build intensifies here — this is the pre-climax section before the final clip.
+
+
+================================================================================
+CLIP 5 — "CTA + BRAND REVEAL" (4 seconds)
+================================================================================
+Covers: Script Scene 9
+
+Visual: Cut back to the logo (Image 1) full-screen on #0A0A0A with a pulsing #CCFF00 glow, edge highlight #B8E600, deep shadow falloff in #4A6600 (0-2s). Quick settle into Image 2 (welcome screen) as the loop-back (2-3s), then fade to the URL card — text in #FFFFFF, underline in #CCFF00 (3-4s).
+
+On-screen text (final, large):
+tracehop.site
+X: @tracehopauto · Telegram: @tracehop_bot
+Free to scan — Robinhood Chain ready.
+
+VO:
+"TRACEHOP. Robinhood Chain, decoded."
+
+SFX/Music: Cinematic impact exactly on "TRACEHOP" (landing around second 2), then music fades to one final clean "ping" at the very end.
+
+
+================================================================================
+CLIP MAP (quick reference)
+================================================================================
+Clip 1 | 6s | Hook + Problem + Reveal | Image 1 | "Robinhood Chain moves 24/7. Thousands of tokens, zero clarity. Meet TRACEHOP."
+Clip 2 | 6s | Onboarding + Dashboard | Image 2, Image 3 | "No sign-up — just paste any contract, or scan free. Sub-second forensics for every Robinhood Chain token."
+Clip 3 | 6s | Query Demo | Image 4 | "Scan any launch. Trace multi-hop funding roots straight to the master wallet."
+Clip 4 | 8s | Data Deep Dive + Features | Image 5, Image 6 | "Not just charts — real forensics: sniper rings, disguised relays, sybil clusters. One undeniable verdict: CAP... or NO CAP."
+Clip 5 | 4s | CTA + Brand Reveal | Image 1, Image 2 | "TRACEHOP. Robinhood Chain, decoded."
+Total: 30s
+
+
+================================================================================
+STITCHING CHECKLIST (after generating all 5 clips)
+================================================================================
+1. Render in order 1->2->3->4->5, no gaps.
+2. Apply the same chartreuse glow-wipe transition at every cut so the join doesn't feel abrupt.
+3. Normalize audio loudness across all 5 clips before stitching — separate generations often come out at different volume levels.
+4. If the voice noticeably shifts between clips despite the shared VOICE PROFILE block, regenerate the offending clip only — don't regenerate all 5.
+5. Keep background music underneath the voice at a consistent low level throughout; boost slightly only at the Clip 1 drop and the Clip 5 impact moment.
+
+
+================================================================================
+ALTERNATIVE SPLIT (if your generator prefers 10s round numbers)
+================================================================================
+10s + 10s + 10s = 30s
+- Clip A (10s): Scenes 1–4 (Hook -> Problem -> Reveal -> Onboarding)
+- Clip B (10s): Scenes 5–6 (Dashboard -> Query Demo)
+- Clip C (10s): Scenes 7–9 (Data Deep Dive -> Features -> CTA)
