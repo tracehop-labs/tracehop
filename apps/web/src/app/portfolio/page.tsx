@@ -51,6 +51,7 @@ interface PortfolioToken {
 }
 
 const KNOWN_TOKENS: Record<string, { symbol: string; name: string; subclass?: string }> = {
+  // Robinhood Chain & EVM
   '0x5c48a6cfb5189670f818568660a1ca0c14c21e18': {
     symbol: '$MEOWTA',
     name: 'Meowta',
@@ -86,7 +87,155 @@ const KNOWN_TOKENS: Record<string, { symbol: string; name: string; subclass?: st
     name: 'Extraction Vulnerability',
     subclass: 'LIQUIDITY_EXTRACTION_RISK',
   },
+  '0x901fc7e22b7bc7353c66f0344a521e6533bf665f': {
+    symbol: '$TRCHP',
+    name: 'TraceHop Token',
+    subclass: 'VERIFIED_ECOSYSTEM',
+  },
+  '0x25fc5d4618078455a292690b4ad06e227453cb06': {
+    symbol: '$VLAD',
+    name: 'Vlad Robinhood Coin',
+    subclass: 'COMMUNITY_MEME_LIQUIDITY',
+  },
+  '0x657bd0541f2e8f89bdb85bcd91589695ca24b85a': {
+    symbol: '$ABI',
+    name: 'Artificial Baby Inu',
+    subclass: 'COORDINATED_SNIPER_CLUSTER',
+  },
+  '0x1cdb289befdfac8af945a288bcdccc382cb34d32': {
+    symbol: '$XL',
+    name: 'X Link Token',
+    subclass: 'VERIFIED_ECOSYSTEM',
+  },
+  '0x54ce863634ea305ad084c3f7338d11dc8454c842': {
+    symbol: '$LIFE',
+    name: 'Change Your Life',
+    subclass: 'ORGANIC_LIQUIDITY',
+  },
+  '0xb97d9e5ad6244d27588fe0a624a8c78e512934ee': {
+    symbol: '$RECEIPT',
+    name: 'Receipt Token',
+    subclass: 'COORDINATED_SNIPER_CLUSTER',
+  },
+  '0x0db476a12d3e1e86829d5d0a5aab0622893df835': {
+    symbol: '$FCC',
+    name: 'Fucking Crazy Cat',
+    subclass: 'COMMUNITY_MEME_LIQUIDITY',
+  },
+  '0x8dxatghrbkpbvq171sskzdc11ssnp8cuonckxyjpm': {
+    symbol: '$PAID',
+    name: 'Paid Agent Token',
+    subclass: 'COMMUNITY_MEME_LIQUIDITY',
+  },
+  '0x0000000000000000000000000000000000000001': {
+    symbol: '$BURN',
+    name: 'Burn Address',
+    subclass: 'VERIFIED_ECOSYSTEM',
+  },
+  '0x00000000000000000000000000000000deadbeef': {
+    symbol: '$DEAD',
+    name: 'DeadBeef Safe Vault',
+    subclass: 'VERIFIED_ECOSYSTEM',
+  },
+
+  // Solana Ecosystem & Pump.fun
+  'So11111111111111111111111111111111111111112': {
+    symbol: '$SOL',
+    name: 'Wrapped SOL',
+    subclass: 'VERIFIED_ECOSYSTEM',
+  },
+  'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v': {
+    symbol: '$USDC',
+    name: 'USD Coin',
+    subclass: 'VERIFIED_ECOSYSTEM',
+  },
+  'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263': {
+    symbol: '$BONK',
+    name: 'Bonk',
+    subclass: 'COMMUNITY_MEME_LIQUIDITY',
+  },
+  'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7n7': {
+    symbol: '$BONK',
+    name: 'Bonk Clone (Sniper Hazard)',
+    subclass: 'COORDINATED_SNIPER_CLUSTER',
+  },
+  'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm': {
+    symbol: '$WIF',
+    name: 'dogwifhat',
+    subclass: 'COMMUNITY_MEME_LIQUIDITY',
+  },
+  'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcQ4': {
+    symbol: '$WIF',
+    name: 'Fake WIF (Extraction Relay)',
+    subclass: 'LIQUIDITY_EXTRACTION_RISK',
+  },
+  '7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr': {
+    symbol: '$POPCAT',
+    name: 'Popcat',
+    subclass: 'COMMUNITY_FAIR_LAUNCH',
+  },
+  '2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv': {
+    symbol: '$PENGU',
+    name: 'Pudgy Penguins',
+    subclass: 'COMMUNITY_MEME_LIQUIDITY',
+  },
+  '7Xu14wYVSDs3EGUuVQ4GbZRo27NLdyBarxGHgqpCpump': {
+    symbol: '$WILLY',
+    name: 'Willy Pump',
+    subclass: 'PUMPFUN_SNIPER_RUN',
+  },
+  'H2Bb99eQyF1Lnk6MQFSEfUFbMFwGZrHHH2fQVPA7pump': {
+    symbol: '$RETARD',
+    name: 'Trader Pump',
+    subclass: 'PUMPFUN_SNIPER_RUN',
+  },
+  'DZ5NKiEL4Y9KaBor5RUHACEvFkDPJ87NMQz9ft7Fpump': {
+    symbol: '$PAIDWOJAK',
+    name: 'Paid Wojak Pump',
+    subclass: 'PUMPFUN_SNIPER_RUN',
+  },
+  'HEFhhy7qzmfv2rtUfG8VLL4ioXfqePApzzzspzzDpump': {
+    symbol: '$HEFF',
+    name: 'Heff Pump',
+    subclass: 'PUMPFUN_SNIPER_RUN',
+  },
+  'BUAfygUaZA373an14AKgkHccek4p4dFLDfhowtQcpump': {
+    symbol: '$BUA',
+    name: 'Bua Pump',
+    subclass: 'PUMPFUN_SNIPER_RUN',
+  },
+  '5nGaJJ3tWpL4sKmZrT5eYpWqFvNuXyL7zK9aA71pW': {
+    symbol: '$CABAL5N',
+    name: 'Cabal Sniper Rug',
+    subclass: 'COORDINATED_SNIPER_CLUSTER',
+  },
+  '7xKpA2q93oWpL4sKmZrT5eYpWqFvNuXyL7zK9aA71': {
+    symbol: '$MEME7X',
+    name: 'Organic Meme Token',
+    subclass: 'COMMUNITY_MEME_LIQUIDITY',
+  },
+  'Fomo123444bJkLmQw11aZ88bVc99981245012444': {
+    symbol: '$FOMO',
+    name: 'FOMO Sniper Testnet',
+    subclass: 'COORDINATED_SNIPER_CLUSTER',
+  },
+  'PAIDWOJAK': {
+    symbol: '$WOJAK',
+    name: 'Paid Wojak Agent',
+    subclass: 'COMMUNITY_MEME_LIQUIDITY',
+  },
 };
+
+function resolveKnownToken(mint: string) {
+  if (!mint) return undefined;
+  if (KNOWN_TOKENS[mint]) return KNOWN_TOKENS[mint];
+  const norm = mint.toLowerCase();
+  if (KNOWN_TOKENS[norm]) return KNOWN_TOKENS[norm];
+  for (const [k, v] of Object.entries(KNOWN_TOKENS)) {
+    if (k.toLowerCase() === norm) return v;
+  }
+  return undefined;
+}
 
 // ponytail: authentic testnet tokens and verifiable risk signals
 const REGISTRY_FIXTURES: PortfolioToken[] = [
@@ -328,8 +477,7 @@ export default function PortfolioPage() {
           const mapped: PortfolioToken[] = data.map((item: any) => {
             const isThreat = item.verdict === 'CAP' || item.verdict === 'THREAT';
             const mint = item.mint || item.address || '0x0000000000000000000000000000000000000000';
-            const normalized = mint.toLowerCase();
-            const known = KNOWN_TOKENS[normalized];
+            const known = resolveKnownToken(mint);
 
             const rawDocAsset = item.uaim_document?.asset;
             let symbol = known?.symbol;
@@ -340,7 +488,8 @@ export default function PortfolioPage() {
               symbol = rawDocAsset.symbol.startsWith('$') ? rawDocAsset.symbol : `$${rawDocAsset.symbol}`;
             }
             if (!symbol) {
-              symbol = mint.length >= 8 ? `$${mint.slice(2, 6).toUpperCase()}` : '$TOKEN';
+              const prefix = mint.startsWith('0x') ? mint.slice(2, 6) : mint.slice(0, 4);
+              symbol = mint.length >= 4 ? `$${prefix.toUpperCase()}` : '$TOKEN';
             }
 
             let name = known?.name;
