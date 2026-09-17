@@ -8,8 +8,6 @@ Generated: September 2026
 SECTION 1: BRIEF
 --------------------------------------------------------------------------------
 Status: Completed
-- Dev-brief: Conceptualized and implemented directly into system architecture.
-- Web Assets: Official Robinhood Chain black feather on electric chartreuse (#CCFF00) branding, dark cyber UI (#0A081E).
 - Repository: https://github.com/tracehop-labs/tracehop
 
 
@@ -32,14 +30,12 @@ SECTION 2: DEV KERJA
    - Gating Protocol: RPC Hold-to-Access (50,000 $ARDRILL balance verification / 3 free anonymous scans)
    - Bot & AI Protocol: Telegram Bot Webhook Integration (@tracehop_bot) + Model Context Protocol (MCP Server)
 
-4. Official Branding Assets:
-   - Primary Logo: docs/tracehop-x-header.jpg / assets/tracehop-banner.jpg
-   - Brand Color: Electric Chartreuse (#CCFF00) + Cyber Void (#0A081E) + TraceHop Amber (#FF7A29)
-
-5. Documentation Index:
-   - Architecture & Pipeline: docs/02-architecture.md
-   - Cross-Chain Intelligence: docs/nocap_crosschain_architecture.md
-   - Video Promo Guide: docs/promo-clips-robinhood-chain.txt
+4. Documentation Index:
+   - Project Report (report.md): https://github.com/tracehop-labs/tracehop/blob/main/docs/report.md
+   - System Architecture: https://github.com/tracehop-labs/tracehop/blob/main/docs/02-architecture.md
+   - Cross-Chain Intelligence: https://github.com/tracehop-labs/tracehop/blob/main/docs/nocap_crosschain_architecture.md
+   - Video Promo Generator Guide: https://github.com/tracehop-labs/tracehop/blob/main/docs/promo-clips-robinhood-chain.txt
+   - Main Repository README: https://github.com/tracehop-labs/tracehop/blob/main/README.md
 
 
 --------------------------------------------------------------------------------
@@ -83,7 +79,7 @@ A. VIDEO ASSETS
 
 2. Video Launch (Cinematic AI Teaser / Promo):
    Status: [CREATED BY USER]
-   Prompt Source File: docs/promo-clips-robinhood-chain.txt
+   Prompt Source File: https://github.com/tracehop-labs/tracehop/blob/main/docs/promo-clips-robinhood-chain.txt
    Link / File Location: [USER INSERT LINK / PATH HERE]
 
 
@@ -150,10 +146,11 @@ SECTION 5: VERIFIKASI (PRE-LAUNCH CHECKLIST)
     - Banner & Avatar: docs/tracehop-x-header.jpg terpasang.
 
 [x] 2. Cek Kelengkapan File Repositori:
-    - Web Application: apps/web/
-    - Robinhood Chain Adapter: chains/robinhood/
-    - Dokumentasi & Handover: docs/submission/submission_package.txt
-    - README.md: Lengkap & sinkron dengan branch main.
+    - Web Application: https://github.com/tracehop-labs/tracehop/tree/main/apps/web
+    - Robinhood Chain Adapter: https://github.com/tracehop-labs/tracehop/tree/main/chains/robinhood
+    - Project Report (report.md): https://github.com/tracehop-labs/tracehop/blob/main/docs/report.md
+    - Handover Package: https://github.com/tracehop-labs/tracehop/blob/main/docs/submission/submission_package.txt
+    - README.md: https://github.com/tracehop-labs/tracehop/blob/main/README.md
 
 [x] 3. Template Chat Konfirmasi:
 --------------------------------------------------------------------------------
@@ -164,9 +161,10 @@ sudah selesai 100% dan siap untuk ditinjau / diluncurkan:
 
 - Web Live: https://tracehop-web.vercel.app
 - GitHub Repo: https://github.com/tracehop-labs/tracehop
+- Project Report (report.md): https://github.com/tracehop-labs/tracehop/blob/main/docs/report.md
 - Official X: https://x.com/tracehopauto
 - Telegram Bot: @tracehop_bot
-- Full Handover Package: docs/submission/submission_package.txt
+- Full Handover Package: https://github.com/tracehop-labs/tracehop/blob/main/docs/submission/submission_package.txt
 
 "Ready to launch!"
 --------------------------------------------------------------------------------
