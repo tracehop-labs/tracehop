@@ -335,14 +335,8 @@ export function Agent() {
               <span className="h-2.5 w-2.5 rounded-full bg-rose-500/80" />
               <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
-              <div className="ml-2 flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-                </span>
-                <span className="text-xs text-[#cbd5e1] font-mono font-medium">tracehop-agent://terminal</span>
-                <span className="hidden sm:inline text-[11px] text-[#64748b] font-mono">· evm:4663</span>
-              </div>
+              <span className="ml-2 text-xs text-[#cbd5e1] font-mono font-medium">tracehop-agent://terminal</span>
+              <span className="hidden sm:inline text-[11px] text-[#64748b] font-mono">· evm:4663</span>
               <span className="ml-auto text-[10px] tracking-[1.5px] text-[#a855f7] border border-[#7c3aed]/50 bg-[#7c3aed]/10 rounded px-2 py-0.5 font-mono font-semibold">
                 AUTONOMOUS RADAR
               </span>
