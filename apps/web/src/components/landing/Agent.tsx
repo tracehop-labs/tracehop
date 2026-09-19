@@ -95,6 +95,7 @@ export function Agent() {
     '> background autonomous scanner active (every 5 min)',
   ]);
   const [expecting, setExpecting] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
   const [counts, setCounts] = useState({ scans: 0, threats: 0 });
   const [clock, setClock] = useState('--:--:--');
   const [ago, setAgo] = useState('—');
@@ -108,6 +109,7 @@ export function Agent() {
     revealRef.current.forEach(clearTimeout);
     revealRef.current = [];
     busyRef.current = true;
+    setIsScanning(true);
     lastTriggerRef.current = 0;
     const isCap = it.verdict === 'CAP';
     const parentPct = it.features?.funding_parent_share != null ? Math.round(it.features.funding_parent_share * 100) : 0;
@@ -158,6 +160,7 @@ export function Agent() {
       say('> Intelligence saved to Postgres database.');
       say('> Entering live mempool & block radar loop...');
       busyRef.current = false;
+      setIsScanning(false);
       setCounts((c) => ({ scans: c.scans + 1, threats: c.threats + (isCap ? 1 : 0) }));
     }, 750 * (steps.length + 1)));
   }, [say]);
@@ -415,28 +418,34 @@ export function Agent() {
             </div>
           </div>
 
-          <div>
+          <div className="flex flex-col gap-5">
             <div className="rounded-2xl border border-[#7c3aed]/25 bg-[#0d0918]/90 overflow-hidden shadow-2xl">
               <div className="flex items-center px-4 py-3 border-b border-[#7c3aed]/20 bg-[#140e30]/60">
                 <span className="text-xs text-[#94a3b8] tracking-wide font-medium">FORENSIC ANALYSIS</span>
                 <span className="ml-auto text-[10px] tracking-[2px] text-[#a855f7] border border-[#7c3aed]/50 rounded px-2 py-0.5 font-mono font-semibold">
-                  {activeStage ? activeStage.toUpperCase() : expecting ? 'SYNCING CRON' : busyRef.current ? 'SCANNING' : verdict ? 'STANDBY (RADAR)' : 'IDLE'}
+                  {activeStage ? activeStage.toUpperCase() : expecting ? 'SYNCING CRON' : isScanning ? 'SCANNING' : verdict ? 'STANDBY (RADAR)' : 'IDLE'}
                 </span>
               </div>
               <div className="p-4">
                 <div className="flex items-center justify-between mb-1.5">
                   <p className="text-[10.5px] tracking-[1.5px] text-[#94a3b8] font-mono uppercase">
-                    {busyRef.current ? 'SCANNING TARGET' : 'LAST VERIFIED TARGET'}
+                    {isScanning ? 'SCANNING TARGET' : 'LAST VERIFIED TARGET'}
                   </p>
-                  {!busyRef.current && verdict && (
+                  {!isScanning && verdict && (
                     <span className="inline-flex items-center gap-1.5 text-[10px] tracking-wider text-emerald-300 font-mono font-medium">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                       VERIFIED ON-CHAIN
                     </span>
                   )}
+                  {isScanning && (
+                    <span className="inline-flex items-center gap-1.5 text-[10px] tracking-wider text-purple-300 font-mono font-medium">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#a855f7] animate-pulse" />
+                      ANALYZING BLOCK DATA
+                    </span>
+                  )}
                 </div>
 
-                <div className="flex items-start justify-between gap-2 mb-4">
+                <div className="flex items-start justify-between gap-2 mb-4 min-h-[38px]">
                   <p className="font-mono text-xs sm:text-[13px] text-white break-all leading-relaxed select-all">
                     {target}
                   </p>
@@ -469,7 +478,7 @@ export function Agent() {
                 <div className="h-[3px] bg-[#7c3aed]/20 rounded overflow-hidden mb-4">
                   <div className="h-full bg-[#a855f7] transition-all duration-500" style={{ width: `${progress}%` }} />
                 </div>
-                <div className="grid grid-cols-2 gap-x-3 gap-y-2 mb-4">
+                <div className="grid grid-cols-2 gap-x-3 gap-y-2 mb-4 min-h-[136px]">
                   {STAGES.map((s) => {
                     const done = doneStages.includes(s.key);
                     const active = activeStage === s.key;
@@ -483,48 +492,84 @@ export function Agent() {
                     );
                   })}
                 </div>
-                {verdict && (
-                  <div className={`rounded-xl border p-4 ${isCap ? 'border-rose-400/40 bg-rose-400/5' : 'border-emerald-400/30 bg-emerald-400/5'}`}>
-                    <p className="text-[10px] tracking-[2px] text-[#94a3b8] mb-1 font-mono">VERDICT</p>
-                    <p className={`text-2xl font-black tracking-wide ${isCap ? 'text-rose-300' : 'text-emerald-300'}`}>
-                      {isCap ? 'THREAT DETECTED' : 'CONTRACT VERIFIED'}
-                    </p>
-                    <p className="text-xs text-[#94a3b8] mt-1 leading-relaxed">
-                      {Math.round((verdict.confidence || 0) * 100)}% · {verdict.subclass}
-                      {verdict.reasons?.[0]?.text ? ` — ${verdict.reasons[0].text}` : ''}
-                    </p>
-                  </div>
-                )}
+
+                <div className={`rounded-xl border p-4 min-h-[102px] flex flex-col justify-center transition-colors duration-300 ${
+                  isScanning
+                    ? 'border-purple-500/40 bg-purple-500/5'
+                    : verdict
+                    ? isCap
+                      ? 'border-rose-400/40 bg-rose-400/5'
+                      : 'border-emerald-400/30 bg-emerald-400/5'
+                    : 'border-[#7c3aed]/20 bg-[#140e30]/40'
+                }`}>
+                  <p className="text-[10px] tracking-[2px] text-[#94a3b8] mb-1 font-mono">VERDICT</p>
+                  <p className={`text-2xl font-black tracking-wide ${
+                    isScanning
+                      ? 'text-purple-300 animate-pulse'
+                      : verdict
+                      ? isCap
+                        ? 'text-rose-300'
+                        : 'text-emerald-300'
+                      : 'text-slate-400'
+                  }`}>
+                    {isScanning
+                      ? 'ANALYZING HEURISTICS...'
+                      : verdict
+                      ? isCap
+                        ? 'THREAT DETECTED'
+                        : 'CONTRACT VERIFIED'
+                      : 'AWAITING TELEMETRY'}
+                  </p>
+                  <p className="text-xs text-[#94a3b8] mt-1 leading-relaxed truncate">
+                    {isScanning
+                      ? activeStage ? `Evaluating ${activeStage}...` : 'Cross-referencing bytecode & early buyers...'
+                      : verdict
+                      ? `${Math.round((verdict.confidence || 0) * 100)}% · ${verdict.subclass}${verdict.reasons?.[0]?.text ? ` — ${verdict.reasons[0].text}` : ''}`
+                      : 'Autonomous scanning cycle active'}
+                  </p>
+                </div>
               </div>
             </div>
 
-            {verdict && (
-              <div className="rounded-2xl border border-[#7c3aed]/25 bg-[#0d0918]/90 p-4 mt-5">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#229ED9]">
-                    <Bot className="h-4 w-4 text-white" />
-                  </span>
-                  <span>
-                    <span className="block text-[13px] text-white">TraceHop Bot</span>
-                    <span className="block text-[10px] text-[#94a3b8]">latest verdict preview</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 ml-auto text-[10px] tracking-[1.5px] text-emerald-300 font-mono">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    LIVE
-                  </span>
-                </div>
-                <div className="rounded-xl border border-[#7c3aed]/20 bg-[#140e30]/60 p-3.5 text-[12.5px] leading-7">
-                  <p className="text-[#94a3b8] font-mono break-all">/scan {target}</p>
-                  <p>Verdict: <b className={isCap ? 'text-rose-300' : 'text-emerald-300'}>{isCap ? 'THREAT DETECTED' : 'CONTRACT VERIFIED'}</b></p>
-                  {verdict.reasons?.slice(0, 2).map((r) => (
-                    <p key={r.code} className="text-[#94a3b8] text-xs leading-5">• {r.text}</p>
-                  ))}
-                  <a href="https://t.me/tracehop_bot" target="_blank" rel="noopener noreferrer" className="text-[#a855f7] text-xs underline underline-offset-2">
-                    Open @tracehop_bot to scan yourself →
-                  </a>
-                </div>
+            <div className="rounded-2xl border border-[#7c3aed]/25 bg-[#0d0918]/90 p-4 min-h-[164px]">
+              <div className="flex items-center gap-2.5 mb-3">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#229ED9]">
+                  <Bot className="h-4 w-4 text-white" />
+                </span>
+                <span>
+                  <span className="block text-[13px] text-white">TraceHop Bot</span>
+                  <span className="block text-[10px] text-[#94a3b8]">latest verdict preview</span>
+                </span>
+                <span className="inline-flex items-center gap-1.5 ml-auto text-[10px] tracking-[1.5px] text-emerald-300 font-mono">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  LIVE
+                </span>
               </div>
-            )}
+              <div className="rounded-xl border border-[#7c3aed]/20 bg-[#140e30]/60 p-3.5 text-[12.5px] leading-7">
+                <p className="text-[#94a3b8] font-mono break-all truncate">/scan {target}</p>
+                <p>
+                  Verdict:{' '}
+                  <b className={isScanning ? 'text-purple-300' : isCap ? 'text-rose-300' : 'text-emerald-300'}>
+                    {isScanning ? 'ANALYZING...' : isCap ? 'THREAT DETECTED' : 'CONTRACT VERIFIED'}
+                  </b>
+                </p>
+                <p className="text-[#94a3b8] text-xs leading-5 truncate">
+                  {isScanning
+                    ? '• Processing 9-stage forensic graph pipeline...'
+                    : verdict?.reasons?.[0]?.text
+                    ? `• ${verdict.reasons[0].text}`
+                    : '• Validated on Robinhood Chain testnet'}
+                </p>
+                <a
+                  href="https://t.me/tracehop_bot"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#a855f7] text-xs underline underline-offset-2 block mt-0.5"
+                >
+                  Open @tracehop_bot to scan yourself →
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
