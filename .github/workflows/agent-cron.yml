@@ -1,0 +1,17 @@
+name: TraceHop Autonomous Agent Cron
+
+on:
+  schedule:
+    # Runs every 5 minutes (UTC)
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping-agent:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Agent Run
+        run: |
+          curl -s -X GET "https://www.tracehop.tech/api/v1/agent/run?secret=h7E6pq0iayOZdKQNexTb3uIUtzDLXjlvWJP2S4kBfwos89VH" \
+            -H "User-Agent: GitHub-Actions-Autonomous-Agent" \
+            --max-time 55 || true
