@@ -1,11 +1,27 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaTelegramPlane, FaGithub } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
+import { Copy, Check, ExternalLink } from 'lucide-react';
 import { scrollToSection } from '@/lib/landing';
 
+const TRACEHOP_CA = '0x9c01e594a93a7bd9fed4a274ea0b128a207f8039';
+
 export function Footer() {
+  const [caCopied, setCaCopied] = useState(false);
+
+  const handleCopyCa = async () => {
+    try {
+      await navigator.clipboard.writeText(TRACEHOP_CA);
+      setCaCopied(true);
+      setTimeout(() => setCaCopied(false), 2000);
+    } catch {
+      setCaCopied(false);
+    }
+  };
+
   return (
     <footer className="relative pt-16 pb-12 text-xs font-sans text-[#94a3b8] bg-[#050212] border-t border-[#1a1236]">
       <motion.div
@@ -79,6 +95,30 @@ export function Footer() {
               >
                 <FaGithub className="w-4 h-4" />
               </a>
+            </div>
+
+            {/* Contract Address */}
+            <div className="mt-4 flex items-center gap-2 p-1.5 pl-2.5 rounded-xl bg-[#0b081c] border border-[#251c47] hover:border-[#7c3aed]/40 text-xs font-mono max-w-full transition-all">
+              <span className="px-1.5 py-0.5 rounded bg-[#7c3aed]/20 text-[#c084fc] font-bold text-[10px] uppercase tracking-wider shrink-0">CA</span>
+              <span className="text-[#94a3b8] truncate select-all text-[11px] max-w-[150px] sm:max-w-[210px]">{TRACEHOP_CA}</span>
+              <button
+                type="button"
+                onClick={handleCopyCa}
+                title="Copy Contract Address"
+                className="inline-flex items-center gap-1 h-6 px-2 rounded-lg bg-[#181135] hover:bg-[#7c3aed] text-[#cbd5e1] hover:text-white text-[10.5px] transition-all ml-auto shrink-0 cursor-pointer"
+              >
+                {caCopied ? (
+                  <>
+                    <Check className="w-3 h-3 text-[#22c55e]" />
+                    <span className="text-[#22c55e] font-semibold text-[10px]">Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3 h-3 text-[#ff7a29]" />
+                    <span className="text-[10px]">Copy</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
 

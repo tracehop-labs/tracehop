@@ -92,6 +92,11 @@ const KNOWN_TOKENS: Record<string, { symbol: string; name: string; subclass?: st
     name: 'TraceHop Token',
     subclass: 'VERIFIED_ECOSYSTEM',
   },
+  '0x9c01e594a93a7bd9fed4a274ea0b128a207f8039': {
+    symbol: '$TRCHP',
+    name: 'TraceHop Token',
+    subclass: 'VERIFIED_ECOSYSTEM',
+  },
   '0x25fc5d4618078455a292690b4ad06e227453cb06': {
     symbol: '$VLAD',
     name: 'Vlad Robinhood Coin',

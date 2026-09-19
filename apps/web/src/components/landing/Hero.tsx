@@ -1,16 +1,21 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import {
   Zap,
   Terminal,
   ArrowDown,
   Layers,
+  Copy,
+  Check,
+  ExternalLink,
 } from 'lucide-react';
 import { PRESET_TOKENS, scrollToSection } from '@/lib/landing';
 import type { PresetToken } from '@/lib/landing';
 import { HeroConstellation } from './HeroConstellation';
+
+const TRACEHOP_CA = '0x9c01e594a93a7bd9fed4a274ea0b128a207f8039';
 
 interface HeroProps {
   onStartDemo: (token?: PresetToken) => void;
@@ -18,6 +23,18 @@ interface HeroProps {
 
 export function Hero({ onStartDemo }: HeroProps) {
   const heroRef = useRef<HTMLDivElement>(null);
+  const [caCopied, setCaCopied] = useState(false);
+
+  const handleCopyCa = async () => {
+    try {
+      await navigator.clipboard.writeText(TRACEHOP_CA);
+      setCaCopied(true);
+      setTimeout(() => setCaCopied(false), 2000);
+    } catch {
+      setCaCopied(false);
+    }
+  };
+
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const springConfig = { damping: 25, stiffness: 120 };
@@ -73,11 +90,11 @@ export function Hero({ onStartDemo }: HeroProps) {
                 alt="TraceHop Mark"
                 className="w-4 h-4 object-contain drop-shadow-[0_0_4px_rgba(255,122,41,0.3)] shrink-0"
               />
-              <span className="font-bold tracking-wider text-[11px] text-[#e2e8f0] uppercase">
+              <span className="font-bold tracking-wider text-[11px] text-[#e2e8f0] uppercase whitespace-nowrap">
                 Multi-chain wallet intelligence
               </span>
               <span className="text-[#7c3aed]/60">·</span>
-              <span className="text-[#c084fc] font-semibold text-[11px]">Robinhood Chain</span>
+              <span className="text-[#c084fc] font-semibold text-[11px] whitespace-nowrap">Robinhood Chain</span>
             </motion.div>
 
             <motion.h1
@@ -143,6 +160,39 @@ export function Hero({ onStartDemo }: HeroProps) {
                 <span>Get Started</span>
               </motion.a>
             </div>
+
+            {/* Contract Address (CA) Widget */}
+            <motion.div
+              data-hero="ca"
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
+              className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-[#150d36]/90 border border-[#7c3aed]/40 hover:border-[#7c3aed]/70 shadow-[0_0_8px_rgba(124,58,237,0.12)] mb-6 text-xs font-mono select-none group/ca transition-all max-w-full"
+            >
+              <span className="px-2 py-0.5 rounded-full bg-[#7c3aed]/25 border border-[#7c3aed]/50 text-[#c084fc] font-bold text-[10px] tracking-wider uppercase shrink-0">
+                CA
+              </span>
+              <span
+                onClick={handleCopyCa}
+                title="Click to copy full contract address"
+                className="text-[#e2e8f0] text-[11px] sm:text-xs tracking-tight font-mono cursor-pointer hover:text-white transition-colors select-all"
+              >
+                {TRACEHOP_CA}
+              </span>
+              <button
+                type="button"
+                onClick={handleCopyCa}
+                title="Copy Contract Address"
+                aria-label="Copy Contract Address"
+                className="inline-flex items-center justify-center w-6.5 h-6.5 rounded-full bg-[#1e1544] hover:bg-[#7c3aed] text-[#cbd5e1] hover:text-white transition-all border border-[#2e2055] hover:border-[#a855f7]/60 cursor-pointer ml-1 shrink-0"
+              >
+                {caCopied ? (
+                  <Check className="w-3.5 h-3.5 text-[#22c55e]" />
+                ) : (
+                  <Copy className="w-3.5 h-3.5 text-[#ff7a29]" />
+                )}
+              </button>
+            </motion.div>
 
             {/* Product Facts */}
             <motion.div
