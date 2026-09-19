@@ -102,7 +102,7 @@ export function Hero({ onStartDemo }: HeroProps) {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display font-extrabold text-[48px] sm:text-[60px] lg:text-[68px] xl:text-[72px] tracking-[-0.035em] leading-[1.03] text-white"
+              className="font-display font-extrabold text-[36px] sm:text-[56px] lg:text-[68px] xl:text-[72px] tracking-[-0.035em] leading-[1.03] text-white"
             >
               Know before <br />
               you{' '}
@@ -136,7 +136,7 @@ export function Hero({ onStartDemo }: HeroProps) {
                 whileTap={{ scale: 0.97 }}
                 href="#demo"
                 onClick={() => onStartDemo(PRESET_TOKENS[0])}
-                className="inline-flex items-center gap-2 h-[48px] px-6.5 rounded-xl bg-gradient-to-r from-[#7c3aed] to-[#6d28d9] hover:from-[#8b5cf6] hover:to-[#7c3aed] text-white font-extrabold text-xs sm:text-[13px] tracking-wider uppercase shadow-[0_0_12px_rgba(124,58,237,0.35)] hover:shadow-[0_0_18px_rgba(124,58,237,0.5)] transition-all duration-200 whitespace-nowrap cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 h-[48px] px-6.5 rounded-xl bg-gradient-to-r from-[#7c3aed] to-[#6d28d9] hover:from-[#8b5cf6] hover:to-[#7c3aed] text-white font-extrabold text-xs sm:text-[13px] tracking-wider uppercase shadow-[0_0_12px_rgba(124,58,237,0.35)] hover:shadow-[0_0_18px_rgba(124,58,237,0.5)] transition-all duration-200 whitespace-nowrap cursor-pointer w-full sm:w-auto"
               >
                 <Zap className="w-4.5 h-4.5 fill-current shrink-0" />
                 <span>Run Live Demo</span>
@@ -154,7 +154,7 @@ export function Hero({ onStartDemo }: HeroProps) {
                   e.preventDefault();
                   scrollToSection('api');
                 }}
-                className="inline-flex items-center gap-2 h-[48px] px-6.5 rounded-xl bg-[#120d2b] hover:bg-[#1b143f] border border-[#2c2054] hover:border-[#7c3aed]/60 text-white font-bold text-xs sm:text-[13px] tracking-wider uppercase shadow-sm transition-all duration-200 whitespace-nowrap cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 h-[48px] px-6.5 rounded-xl bg-[#120d2b] hover:bg-[#1b143f] border border-[#2c2054] hover:border-[#7c3aed]/60 text-white font-bold text-xs sm:text-[13px] tracking-wider uppercase shadow-sm transition-all duration-200 whitespace-nowrap cursor-pointer w-full sm:w-auto"
               >
                 <Terminal className="w-4 h-4 text-[#c4b5fd] shrink-0" />
                 <span>Get Started</span>
@@ -175,7 +175,7 @@ export function Hero({ onStartDemo }: HeroProps) {
               <span
                 onClick={handleCopyCa}
                 title="Click to copy full contract address"
-                className="text-[#e2e8f0] text-[11px] sm:text-xs tracking-tight font-mono cursor-pointer hover:text-white transition-colors select-all"
+                className="text-[#e2e8f0] text-[11px] sm:text-xs tracking-tight font-mono cursor-pointer hover:text-white transition-colors select-all truncate max-w-[180px] xs:max-w-[240px] sm:max-w-none"
               >
                 {TRACEHOP_CA}
               </span>
@@ -214,7 +214,7 @@ export function Hero({ onStartDemo }: HeroProps) {
           <motion.div
             data-hero="visual"
             style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
-            className="lg:col-span-7 relative flex items-center justify-center min-h-[460px]"
+            className="lg:col-span-7 relative flex items-center justify-center min-h-[300px] sm:min-h-[380px] lg:min-h-[460px]"
           >
             <div className="relative w-full max-w-[860px] aspect-[860/460] flex items-center justify-center">
               <HeroConstellation rabbitMoveX={rabbitMoveX} rabbitMoveY={rabbitMoveY} />

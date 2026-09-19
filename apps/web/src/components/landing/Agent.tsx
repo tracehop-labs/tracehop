@@ -477,16 +477,16 @@ export function Agent() {
                 <div className="h-[3px] bg-[#7c3aed]/20 rounded overflow-hidden mb-4">
                   <div className="h-full bg-[#a855f7] transition-all duration-500" style={{ width: `${progress}%` }} />
                 </div>
-                <div className="grid grid-cols-2 gap-x-3 gap-y-2 mb-4 min-h-[136px]">
+                <div className="grid grid-cols-2 gap-x-2.5 sm:gap-x-3 gap-y-2 mb-4 min-h-[136px]">
                   {STAGES.map((s) => {
                     const done = doneStages.includes(s.key);
                     const active = activeStage === s.key;
                     return (
-                      <div key={s.key} className={`flex items-center gap-2.5 text-xs transition-opacity ${done ? 'text-white opacity-100' : 'text-[#94a3b8] opacity-40'}`}>
-                        <span className={`flex h-4 w-4 items-center justify-center rounded border text-[10px] ${done ? 'border-emerald-400/60 text-emerald-300 bg-emerald-400/10' : active ? 'border-[#a855f7] text-[#a855f7] bg-[#a855f7]/10' : 'border-[#7c3aed]/30'}`}>
+                      <div key={s.key} className={`flex items-center gap-2 text-[11px] sm:text-xs transition-opacity ${done ? 'text-white opacity-100' : 'text-[#94a3b8] opacity-40'}`}>
+                        <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border text-[10px] ${done ? 'border-emerald-400/60 text-emerald-300 bg-emerald-400/10' : active ? 'border-[#a855f7] text-[#a855f7] bg-[#a855f7]/10' : 'border-[#7c3aed]/30'}`}>
                           {done ? '✓' : active ? '•' : ''}
                         </span>
-                        {s.label}
+                        <span className="truncate">{s.label}</span>
                       </div>
                     );
                   })}
@@ -572,7 +572,7 @@ export function Agent() {
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-8 mt-11 pt-7 border-t border-[#7c3aed]/20">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl mx-auto mt-11 pt-7 border-t border-[#7c3aed]/20">
           {[
             { n: String(counts.scans), l: 'Agent verdicts shown' },
             { n: String(counts.threats), l: 'Threats flagged' },

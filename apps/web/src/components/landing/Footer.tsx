@@ -126,6 +126,7 @@ export function Footer() {
           <div className="col-span-1 md:col-span-2 flex flex-col gap-2.5">
             <h5 className="font-bold text-white font-mono text-xs uppercase tracking-wider mb-1">PRODUCT</h5>
             <a href="#demo" onClick={(e) => { e.preventDefault(); scrollToSection('demo'); }} className="hover:text-white transition-colors text-xs py-0.5">Live Demo</a>
+            <a href="#agent" onClick={(e) => { e.preventDefault(); scrollToSection('agent'); }} className="hover:text-white transition-colors text-xs py-0.5">Autonomous Agent</a>
             <a href="#engine" onClick={(e) => { e.preventDefault(); scrollToSection('engine'); }} className="hover:text-white transition-colors text-xs py-0.5">Features</a>
             <a href="#why" onClick={(e) => { e.preventDefault(); scrollToSection('why'); }} className="hover:text-white transition-colors text-xs py-0.5">Why TraceHop</a>
             <a href="#stats" onClick={(e) => { e.preventDefault(); scrollToSection('stats'); }} className="hover:text-white transition-colors text-xs py-0.5">Telemetry</a>

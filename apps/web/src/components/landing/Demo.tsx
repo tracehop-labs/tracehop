@@ -503,13 +503,13 @@ export function Demo({ registerScanner }: DemoProps) {
                     }
                   }}
                   placeholder="Paste token mint address..."
-                  className="w-full bg-transparent px-4 sm:px-5 py-2.5 text-xs sm:text-sm text-white placeholder-[#64748b] font-sans focus:outline-none"
+                  className="w-full bg-transparent px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm text-white placeholder-[#64748b] font-sans focus:outline-none min-w-0"
                 />
                 <button
                   onClick={() => handleStartScan()}
                   disabled={isScanning}
                   type="button"
-                  className="inline-flex items-center gap-2 h-11 sm:h-12 px-6 sm:px-8 rounded-xl bg-[#7c3aed] hover:bg-[#6d28d9] text-white font-extrabold text-xs uppercase tracking-wider shadow-[0_0_10px_rgba(124,58,237,0.3)] hover:shadow-[0_0_16px_rgba(124,58,237,0.45)] transition-all shrink-0 cursor-pointer disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 sm:gap-2 h-10 sm:h-12 px-4 sm:px-8 rounded-xl bg-[#7c3aed] hover:bg-[#6d28d9] text-white font-extrabold text-[11px] sm:text-xs uppercase tracking-wider shadow-[0_0_10px_rgba(124,58,237,0.3)] hover:shadow-[0_0_16px_rgba(124,58,237,0.45)] transition-all shrink-0 cursor-pointer disabled:opacity-50 whitespace-nowrap"
                 >
                   {isScanning ? (
                     <>
