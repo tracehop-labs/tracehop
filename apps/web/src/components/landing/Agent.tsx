@@ -152,9 +152,23 @@ export function Agent() {
     }, 750 * (steps.length + 1)));
   }, [say]);
 
-  // Load from Supabase: distinguish fresh scan vs prior scan
+  // Load from Supabase: sync live counts and distinguish fresh scan vs prior scan
   const load = useCallback(async () => {
     try {
+      // 1. Fetch live DB counts so stats never show 0
+      const [{ count: totalScans }, { count: totalThreats }] = await Promise.all([
+        supabase.from('predictions').select('*', { count: 'exact', head: true }),
+        supabase.from('predictions').select('*', { count: 'exact', head: true }).eq('verdict', 'CAP'),
+      ]);
+
+      if (typeof totalScans === 'number') {
+        setCounts({
+          scans: totalScans,
+          threats: typeof totalThreats === 'number' ? totalThreats : 0,
+        });
+      }
+
+      // 2. Fetch latest EVM predictions for agent feed
       const { data } = await supabase
         .from('predictions')
         .select('mint, verdict, confidence, subclass, reasons, features, created_at')
