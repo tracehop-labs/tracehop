@@ -307,7 +307,7 @@ export function Why() {
 
               <div>
                 <a
-                  href="https://t.me/TraceHopAgentBot"
+                  href="https://t.me/tracehop_bot"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2.5 h-11 px-5 rounded-xl bg-[#140e30] hover:bg-[#7c3aed] text-white font-bold text-xs uppercase tracking-wider border border-[#7c3aed]/50 shadow-[0_0_14px_rgba(124,58,237,0.3)] transition-all w-fit"
