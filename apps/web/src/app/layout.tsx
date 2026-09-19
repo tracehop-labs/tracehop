@@ -25,14 +25,14 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://tracehop-web.vercel.app'),
+  metadataBase: new URL('https://www.tracehop.tech'),
   title: 'TraceHop · Know before you ape',
   description: 'Autonomous Multi-Chain Wallet Intelligence & Forensic Graph Layer for Web3 Token Launches. Screen the creator, trace the funding graph, and detect insider clusters.',
   icons: { icon: '/assets/rabbit-minimal.webp' },
   openGraph: {
     title: 'TraceHop · Know before you ape',
     description: 'Autonomous multi-chain wallet intelligence and forensic graph platform for Robinhood Chain & EVM.',
-    url: 'https://tracehop-web.vercel.app',
+    url: 'https://www.tracehop.tech',
     siteName: 'TraceHop',
     images: [
       {

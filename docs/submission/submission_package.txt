@@ -15,7 +15,7 @@ Status: Completed
 SECTION 2: DEV KERJA
 --------------------------------------------------------------------------------
 1. Live Production Web URL:
-   https://tracehop-web.vercel.app
+   https://www.tracehop.tech
 
 2. GitHub Repository:
    https://github.com/tracehop-labs/tracehop
@@ -97,7 +97,7 @@ TraceHop dismantles this deception by analyzing the initial transaction block gr
 
 3. END-TO-END APPLICATION FLOW (USER & SYSTEM WORKFLOW)
 [Step 1: Ingestion & Gating]
-- User opens https://tracehop-web.vercel.app.
+- User opens https://www.tracehop.tech.
 - User selects Robinhood Chain and inputs a token contract address (e.g., preset $ARDRILL: 0x37c68202303082e5c7c279a9c6f646786a94116a62cd75d1f7650f86bfeadfde).
 - GateKeeper middleware checks connection: verifies EVM wallet balance for 50,000 $ARDRILL via RPC, or decrements local anonymous free scan quota (3 free).
 
@@ -152,7 +152,7 @@ Halo tim / lead,
 Proyek TRACEHOP (Autonomous Multi-Chain Wallet Intelligence & Forensic Graph Layer)
 sudah selesai 100% dan siap untuk ditinjau / diluncurkan:
 
-- Web Live: https://tracehop-web.vercel.app
+- Web Live: https://www.tracehop.tech
 - GitHub Repo: https://github.com/tracehop-labs/tracehop
 - Project Report (report.md): https://github.com/tracehop-labs/tracehop/blob/main/docs/report.md
 - Official X: https://x.com/tracehopauto

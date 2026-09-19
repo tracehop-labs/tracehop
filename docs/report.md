@@ -2,7 +2,7 @@
 
 **Autonomous Multi-Chain Wallet Intelligence & Forensic Graph Layer for Web3 Token Launches**
 
-🌐 **Web Application:** [https://tracehop-web.vercel.app](https://tracehop-web.vercel.app)  
+🌐 **Web Application:** [https://www.tracehop.tech](https://www.tracehop.tech)
 🏛️ **GitHub Organization:** [https://github.com/tracehop-labs/tracehop](https://github.com/tracehop-labs/tracehop)  
 🐦 **Official X:** [@tracehopauto](https://x.com/tracehopauto)  
 🤖 **Telegram Bot:** [@tracehop_bot](https://t.me/tracehop_bot)  
