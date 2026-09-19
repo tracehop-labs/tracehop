@@ -63,6 +63,15 @@ const SYNCING_LOGS = [
   (sec: number, blk: number) => `> [CYCLE] Awaiting next confirmed deployment signature...`,
 ];
 
+function parseUtcDate(str: string | number | null | undefined): number {
+  if (!str) return Date.now();
+  if (typeof str === 'number') return str;
+  const s = String(str).trim();
+  const iso = s.endsWith('Z') || /[+-]\d{2}(:\d{2})?$/.test(s) ? s : s + 'Z';
+  const t = new Date(iso).getTime();
+  return isNaN(t) ? Date.now() : t;
+}
+
 export function Agent() {
   const sectionRef = useRef<HTMLElement>(null);
   const termRef = useRef<HTMLDivElement>(null);
@@ -106,7 +115,7 @@ export function Agent() {
     const sameBlock = it.features?.same_block_count ?? 0;
 
     setTarget(it.mint);
-    setLastAt(new Date(it.created_at).getTime());
+    setLastAt(parseUtcDate(it.created_at));
     setExpecting(false);
     setVerdict(null);
     setDoneStages([]);
@@ -182,8 +191,9 @@ export function Agent() {
       // First mount check
       if (shownRef.current === null) {
         shownRef.current = newest.created_at;
-        const ageMs = Date.now() - new Date(newest.created_at).getTime();
-        setLastAt(new Date(newest.created_at).getTime());
+        const createdTime = parseUtcDate(newest.created_at);
+        const ageMs = Date.now() - createdTime;
+        setLastAt(createdTime);
         setTarget(newest.mint);
 
         if (ageMs < 20000) {
