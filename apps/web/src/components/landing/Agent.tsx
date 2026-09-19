@@ -234,31 +234,40 @@ export function Agent() {
         setNext(`next ~${Math.floor(remain / 60)}:${String(remain % 60).padStart(2, '0')}`);
         setExpecting(false);
       } else {
-        setNext(`syncing…`);
+        setNext(`scanning…`);
         setExpecting(true);
 
-        // If background cron is overdue by >45s, fire client backup trigger to keep chain fresh
+        // Instantly trigger autonomous scan when 5-min cadence is reached
         const now = Date.now();
-        if (elapsed >= CADENCE_SEC + 45 && now - lastTriggerRef.current > 30000 && !busyRef.current) {
+        if (now - lastTriggerRef.current > 15000 && !busyRef.current) {
           lastTriggerRef.current = now;
+          say(`> [CRON TRIGGER] 5-minute cadence reached — initiating autonomous scan...`);
           fetch('/api/v1/agent/run?client_trigger=true')
             .then(async (res) => {
               if (res.ok) {
-                load();
+                const j = await res.json();
+                if (j && j.mint && j.verdict) {
+                  shownRef.current = j.created_at || new Date().toISOString();
+                  show(j);
+                  return;
+                }
               }
+              load();
             })
-            .catch(() => {});
+            .catch(() => {
+              load();
+            });
         }
       }
     }, 1000);
 
-    // 2. Regular DB polling (30s) and fast polling when expecting (3.5s)
+    // 2. Regular DB polling (30s) and fast polling when expecting (1.5s)
     const poll = setInterval(() => { if (!document.hidden) load(); }, POLL_MS);
     const fast = setInterval(() => {
       if (expecting && !document.hidden && !busyRef.current) {
         load();
       }
-    }, 3500);
+    }, 1500);
 
     // 3. Continuous lively radar telemetry loop (every 2.2s - NEVER STOPS)
     const radar = setInterval(() => {
@@ -422,7 +431,7 @@ export function Agent() {
               <div className="flex items-center px-4 py-3 border-b border-[#7c3aed]/20 bg-[#140e30]/60">
                 <span className="text-xs text-[#94a3b8] tracking-wide font-medium">FORENSIC ANALYSIS</span>
                 <span className="ml-auto text-[10px] tracking-[2px] text-[#a855f7] border border-[#7c3aed]/50 rounded px-2 py-0.5 font-mono font-semibold">
-                  {activeStage ? activeStage.toUpperCase() : expecting ? 'SYNCING CRON' : isScanning ? 'SCANNING' : verdict ? 'STANDBY (RADAR)' : 'IDLE'}
+                  {activeStage ? activeStage.toUpperCase() : isScanning ? 'SCANNING' : expecting ? 'DISCOVERING TARGET' : verdict ? 'STANDBY (RADAR)' : 'IDLE'}
                 </span>
               </div>
               <div className="p-4">
