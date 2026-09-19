@@ -18,7 +18,7 @@ export function Navbar() {
   // no stale cached offsets (survives layout shifts, Lenis, content-visibility).
   // 'top' is handled by scroll position since #top wraps the whole page.
   useEffect(() => {
-    const sectionIds = ['demo', 'engine', 'why', 'stats', 'api'];
+    const sectionIds = ['demo', 'agent', 'engine', 'why', 'stats', 'api'];
 
     const observer = new IntersectionObserver(
       (entries) => {
