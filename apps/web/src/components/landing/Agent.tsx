@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Bot, Radio } from 'lucide-react';
+import { Bot, Radio, Copy, Check, ExternalLink } from 'lucide-react';
 import { supabase } from '@/lib/supabase-client';
 
 // ponytail: ONE writer (backend cron every 5 min). Browser mirrors its cadence:
@@ -75,6 +75,7 @@ export function Agent() {
   const lastTriggerRef = useRef<number>(0);
 
   const [target, setTarget] = useState('awaiting next cycle...');
+  const [copied, setCopied] = useState(false);
   const [lastAt, setLastAt] = useState<number | null>(null);
   const [verdict, setVerdict] = useState<AgentVerdict | null>(null);
   const [doneStages, setDoneStages] = useState<string[]>([]);
@@ -128,8 +129,8 @@ export function Agent() {
       { key: 'bundle', pct: 90, log: freshPct > 0 ? `> [8/9] Bundle check: ${freshPct}% wallets under 24h old` : '> [8/9] Bundle coordination check complete' },
     ];
 
-    say(`> ═══════════════════════════════════════════════`);
-    say(`> ⚡ CRON CYCLE TRIGGERED: Target ${short(it.mint)}`);
+    say(`> -----------------------------------------------`);
+    say(`> [CRON TRIGGER] Autonomous scan target: ${short(it.mint)}`);
 
     steps.forEach((s, i) => {
       revealRef.current.push(setTimeout(() => {
@@ -144,7 +145,7 @@ export function Agent() {
       setProgress(100);
       setActiveStage(null);
       setVerdict({ verdict: it.verdict, confidence: it.confidence, subclass: it.subclass, reasons: it.reasons });
-      say(`${isCap ? '🔴' : '🟢'} VERDICT: ${isCap ? 'THREAT DETECTED' : 'CONTRACT VERIFIED'} (${Math.round((it.confidence || 0) * 100)}% confidence · ${it.subclass})`);
+      say(`> [VERDICT] ${isCap ? '[THREAT DETECTED]' : '[CONTRACT VERIFIED]'} (${Math.round((it.confidence || 0) * 100)}% confidence · ${it.subclass})`);
       say('> Intelligence saved to Postgres database.');
       say('> Entering live mempool & block radar loop...');
       busyRef.current = false;
@@ -329,47 +330,141 @@ export function Agent() {
         </motion.div>
 
         <div className="grid lg:grid-cols-[1.15fr_.85fr] gap-5 mt-12 items-start">
-          <div className="rounded-2xl border border-[#7c3aed]/25 bg-[#0d0918]/90 overflow-hidden">
-            <div className="flex items-center gap-2 px-4 py-3 border-b border-[#7c3aed]/20 bg-[#140e30]/60">
-              <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
-              <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
-              <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-              <span className="ml-2 text-xs text-[#94a3b8] font-mono">tracehop-agent — live feed</span>
-              <span className="ml-auto text-[10px] tracking-[2px] text-[#a855f7] border border-[#7c3aed]/50 rounded px-2 py-0.5">AUTONOMOUS</span>
+          <div className="rounded-2xl border border-[#7c3aed]/25 bg-[#0d0918]/90 overflow-hidden shadow-2xl">
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-[#7c3aed]/25 bg-[#140e30]/80">
+              <span className="h-2.5 w-2.5 rounded-full bg-rose-500/80" />
+              <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
+              <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
+              <div className="ml-2 flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                </span>
+                <span className="text-xs text-[#cbd5e1] font-mono font-medium">tracehop-agent://terminal</span>
+                <span className="hidden sm:inline text-[11px] text-[#64748b] font-mono">· evm:4663</span>
+              </div>
+              <span className="ml-auto text-[10px] tracking-[1.5px] text-[#a855f7] border border-[#7c3aed]/50 bg-[#7c3aed]/10 rounded px-2 py-0.5 font-mono font-semibold">
+                AUTONOMOUS RADAR
+              </span>
             </div>
-            <div ref={termRef} className="h-[400px] overflow-hidden p-4 font-mono text-[12.5px] leading-[1.9]">
-              {logs.map((l, i) => (
-                <p key={i} className="text-[#94a3b8] break-all">
-                  {l.startsWith('🔴') || l.startsWith('> cluster') ? <span className="text-amber-300">{l}</span>
-                    : l.startsWith('🟢') ? <span className="text-emerald-300">{l}</span>
-                    : l.startsWith('> new cycle') || l.startsWith('> tracehop') || l.startsWith('> cycle') || l.startsWith('> cron') ? <span className="text-[#a855f7]">{l}</span>
-                    : l}
-                </p>
-              ))}
+            <div ref={termRef} className="h-[400px] overflow-hidden p-4 font-mono text-[12px] leading-[1.85] bg-[#070510]/80">
+              {logs.map((l, i) => {
+                if (l.includes('[THREAT DETECTED]')) {
+                  return (
+                    <div key={i} className="my-1.5 p-2 rounded-lg bg-rose-500/15 border border-rose-500/40 text-rose-300 font-bold break-all font-mono">
+                      {l}
+                    </div>
+                  );
+                }
+                if (l.includes('[CONTRACT VERIFIED]')) {
+                  return (
+                    <div key={i} className="my-1.5 p-2 rounded-lg bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-bold break-all font-mono">
+                      {l}
+                    </div>
+                  );
+                }
+                if (l.includes('[CRON TRIGGER]')) {
+                  return (
+                    <p key={i} className="text-amber-300 font-bold bg-amber-400/10 px-2 py-0.5 rounded my-1 border border-amber-400/30 break-all font-mono">
+                      {l}
+                    </p>
+                  );
+                }
+                if (l.startsWith('> ---')) {
+                  return (
+                    <p key={i} className="text-[#7c3aed]/50 my-1 overflow-hidden select-none font-mono">
+                      {l}
+                    </p>
+                  );
+                }
+                const tagMatch = l.match(/^> \[([^\]]+)\](.*)$/);
+                if (tagMatch) {
+                  const [, tag, rest] = tagMatch;
+                  const tagStyle =
+                    tag === 'RADAR' ? 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10'
+                    : tag.startsWith('BLOCK') ? 'text-purple-300 border-purple-500/30 bg-purple-500/10'
+                    : tag === 'MEMPOOL' ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10'
+                    : tag === 'STANDBY' ? 'text-slate-400 border-slate-500/30 bg-slate-500/10'
+                    : tag === 'CRON SYNC' || tag === 'CRON CADENCE' ? 'text-amber-300 border-amber-500/30 bg-amber-500/10'
+                    : tag === 'HEARTBEAT' ? 'text-pink-400 border-pink-500/30 bg-pink-500/10'
+                    : tag === 'ORACLE' ? 'text-sky-300 border-sky-500/30 bg-sky-500/10'
+                    : tag === 'WATCHDOG' ? 'text-indigo-300 border-indigo-500/30 bg-indigo-500/10'
+                    : 'text-violet-300 border-violet-500/30 bg-violet-500/10';
+
+                  return (
+                    <p key={i} className="text-[#94a3b8] break-all leading-relaxed my-0.5 font-mono">
+                      <span className="text-[#64748b] mr-1.5">&gt;</span>
+                      <span className={`inline-block text-[10px] px-1.5 py-0.2 mr-1.5 rounded border font-mono font-medium ${tagStyle}`}>
+                        [{tag}]
+                      </span>
+                      <span className="text-[#cbd5e1]">{rest}</span>
+                    </p>
+                  );
+                }
+                return (
+                  <p key={i} className="text-[#94a3b8] break-all my-0.5 font-mono">
+                    {l}
+                  </p>
+                );
+              })}
               <span className="inline-block w-[7px] h-[13px] bg-[#a855f7] animate-pulse align-[-2px]" />
             </div>
           </div>
 
           <div>
-            <div className="rounded-2xl border border-[#7c3aed]/25 bg-[#0d0918]/90 overflow-hidden">
+            <div className="rounded-2xl border border-[#7c3aed]/25 bg-[#0d0918]/90 overflow-hidden shadow-2xl">
               <div className="flex items-center px-4 py-3 border-b border-[#7c3aed]/20 bg-[#140e30]/60">
-                <span className="text-xs text-[#94a3b8] tracking-wide">FORENSIC ANALYSIS</span>
-                <span className="ml-auto text-[10px] tracking-[2px] text-[#a855f7] border border-[#7c3aed]/50 rounded px-2 py-0.5 font-mono">
+                <span className="text-xs text-[#94a3b8] tracking-wide font-medium">FORENSIC ANALYSIS</span>
+                <span className="ml-auto text-[10px] tracking-[2px] text-[#a855f7] border border-[#7c3aed]/50 rounded px-2 py-0.5 font-mono font-semibold">
                   {activeStage ? activeStage.toUpperCase() : expecting ? 'SYNCING CRON' : busyRef.current ? 'SCANNING' : verdict ? 'STANDBY (RADAR)' : 'IDLE'}
                 </span>
               </div>
               <div className="p-4">
-                <p className="text-[11px] tracking-[1px] text-[#94a3b8] mb-1">
-                  {busyRef.current ? 'SCANNING TARGET' : 'LAST VERIFIED TARGET'}
-                </p>
-                <div className="flex items-center gap-2 mb-4">
-                  <p className="text-sm text-white break-all font-mono">{EVM_RE.test(target) ? short(target) : target}</p>
+                <div className="flex items-center justify-between mb-1.5">
+                  <p className="text-[10.5px] tracking-[1.5px] text-[#94a3b8] font-mono uppercase">
+                    {busyRef.current ? 'SCANNING TARGET (FULL CA)' : 'LAST VERIFIED TARGET (FULL CA)'}
+                  </p>
                   {!busyRef.current && verdict && (
-                    <span className="text-[10px] tracking-wider text-emerald-300 border border-emerald-400/30 bg-emerald-400/10 rounded px-2 py-0.5">
-                      VERIFIED
+                    <span className="inline-flex items-center gap-1.5 text-[10px] tracking-wider text-emerald-300 border border-emerald-400/40 bg-emerald-400/10 rounded-full px-2.5 py-0.5 font-mono font-medium">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      VERIFIED ON-CHAIN
                     </span>
                   )}
                 </div>
+
+                {/* Full Un-truncated Contract Address Box */}
+                <div className="rounded-xl border border-[#7c3aed]/30 bg-[#140e30]/80 p-3 mb-4 transition-colors hover:border-[#a855f7]/50">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="font-mono text-xs sm:text-[13px] text-white break-all leading-relaxed select-all">
+                      {target}
+                    </p>
+                    {EVM_RE.test(target) && (
+                      <div className="flex items-center gap-1 shrink-0 ml-1">
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(target);
+                            setCopied(true);
+                            setTimeout(() => setCopied(false), 2000);
+                          }}
+                          className="p-1.5 rounded-lg border border-[#7c3aed]/30 hover:border-[#a855f7] bg-[#0d0918] hover:bg-[#7c3aed]/20 text-[#94a3b8] hover:text-white transition-all cursor-pointer"
+                          title="Copy Full Contract Address"
+                        >
+                          {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                        </button>
+                        <a
+                          href={`https://robinhoodchain.blockscout.com/address/${target}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-1.5 rounded-lg border border-[#7c3aed]/30 hover:border-[#a855f7] bg-[#0d0918] hover:bg-[#7c3aed]/20 text-[#94a3b8] hover:text-white transition-all"
+                          title="View on Robinhood Blockscout Explorer"
+                        >
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 <div className="h-[3px] bg-[#7c3aed]/20 rounded overflow-hidden mb-4">
                   <div className="h-full bg-[#a855f7] transition-all duration-500" style={{ width: `${progress}%` }} />
                 </div>
@@ -389,7 +484,7 @@ export function Agent() {
                 </div>
                 {verdict && (
                   <div className={`rounded-xl border p-4 ${isCap ? 'border-rose-400/40 bg-rose-400/5' : 'border-emerald-400/30 bg-emerald-400/5'}`}>
-                    <p className="text-[10px] tracking-[2px] text-[#94a3b8] mb-1">VERDICT</p>
+                    <p className="text-[10px] tracking-[2px] text-[#94a3b8] mb-1 font-mono">VERDICT</p>
                     <p className={`text-2xl font-black tracking-wide ${isCap ? 'text-rose-300' : 'text-emerald-300'}`}>
                       {isCap ? 'THREAT DETECTED' : 'CONTRACT VERIFIED'}
                     </p>
@@ -412,10 +507,13 @@ export function Agent() {
                     <span className="block text-[13px] text-white">TraceHop Bot</span>
                     <span className="block text-[10px] text-[#94a3b8]">latest verdict preview</span>
                   </span>
-                  <span className="ml-auto text-[10px] tracking-[1.5px] text-emerald-300">● LIVE</span>
+                  <span className="inline-flex items-center gap-1.5 ml-auto text-[10px] tracking-[1.5px] text-emerald-300 font-mono">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    LIVE
+                  </span>
                 </div>
                 <div className="rounded-xl border border-[#7c3aed]/20 bg-[#140e30]/60 p-3.5 text-[12.5px] leading-7">
-                  <p className="text-[#94a3b8] font-mono break-all">/scan {short(target)}</p>
+                  <p className="text-[#94a3b8] font-mono break-all">/scan {target}</p>
                   <p>Verdict: <b className={isCap ? 'text-rose-300' : 'text-emerald-300'}>{isCap ? 'THREAT DETECTED' : 'CONTRACT VERIFIED'}</b></p>
                   {verdict.reasons?.slice(0, 2).map((r) => (
                     <p key={r.code} className="text-[#94a3b8] text-xs leading-5">• {r.text}</p>
