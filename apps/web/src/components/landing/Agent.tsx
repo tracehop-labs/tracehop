@@ -426,47 +426,44 @@ export function Agent() {
               <div className="p-4">
                 <div className="flex items-center justify-between mb-1.5">
                   <p className="text-[10.5px] tracking-[1.5px] text-[#94a3b8] font-mono uppercase">
-                    {busyRef.current ? 'SCANNING TARGET (FULL CA)' : 'LAST VERIFIED TARGET (FULL CA)'}
+                    {busyRef.current ? 'SCANNING TARGET' : 'LAST VERIFIED TARGET'}
                   </p>
                   {!busyRef.current && verdict && (
-                    <span className="inline-flex items-center gap-1.5 text-[10px] tracking-wider text-emerald-300 border border-emerald-400/40 bg-emerald-400/10 rounded-full px-2.5 py-0.5 font-mono font-medium">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] tracking-wider text-emerald-300 font-mono font-medium">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                       VERIFIED ON-CHAIN
                     </span>
                   )}
                 </div>
 
-                {/* Full Un-truncated Contract Address Box */}
-                <div className="rounded-xl border border-[#7c3aed]/30 bg-[#140e30]/80 p-3 mb-4 transition-colors hover:border-[#a855f7]/50">
-                  <div className="flex items-start justify-between gap-2">
-                    <p className="font-mono text-xs sm:text-[13px] text-white break-all leading-relaxed select-all">
-                      {target}
-                    </p>
-                    {EVM_RE.test(target) && (
-                      <div className="flex items-center gap-1 shrink-0 ml-1">
-                        <button
-                          onClick={() => {
-                            navigator.clipboard.writeText(target);
-                            setCopied(true);
-                            setTimeout(() => setCopied(false), 2000);
-                          }}
-                          className="p-1.5 rounded-lg border border-[#7c3aed]/30 hover:border-[#a855f7] bg-[#0d0918] hover:bg-[#7c3aed]/20 text-[#94a3b8] hover:text-white transition-all cursor-pointer"
-                          title="Copy Full Contract Address"
-                        >
-                          {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
-                        </button>
-                        <a
-                          href={`https://robinhoodchain.blockscout.com/address/${target}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-1.5 rounded-lg border border-[#7c3aed]/30 hover:border-[#a855f7] bg-[#0d0918] hover:bg-[#7c3aed]/20 text-[#94a3b8] hover:text-white transition-all"
-                          title="View on Robinhood Blockscout Explorer"
-                        >
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        </a>
-                      </div>
-                    )}
-                  </div>
+                <div className="flex items-start justify-between gap-2 mb-4">
+                  <p className="font-mono text-xs sm:text-[13px] text-white break-all leading-relaxed select-all">
+                    {target}
+                  </p>
+                  {EVM_RE.test(target) && (
+                    <div className="flex items-center gap-1 shrink-0 ml-1">
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(target);
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 2000);
+                        }}
+                        className="p-1 text-[#94a3b8] hover:text-white transition-colors cursor-pointer"
+                        title="Copy Contract Address"
+                      >
+                        {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                      </button>
+                      <a
+                        href={`https://robinhoodchain.blockscout.com/address/${target}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1 text-[#94a3b8] hover:text-white transition-colors"
+                        title="View on Explorer"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    </div>
+                  )}
                 </div>
 
                 <div className="h-[3px] bg-[#7c3aed]/20 rounded overflow-hidden mb-4">
