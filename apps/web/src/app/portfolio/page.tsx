@@ -571,7 +571,9 @@ export default function PortfolioPage() {
     }
 
     loadPortfolio();
-    return () => { alive = false; };
+    // ponytail: agent verdicts upsert into predictions, repoll so portfolio grows live
+    const poll = setInterval(() => { if (!document.hidden) loadPortfolio(); }, 60000);
+    return () => { alive = false; clearInterval(poll); };
   }, []);
 
   const handleCopy = (mint: string) => {

@@ -6,6 +6,7 @@ import { CyberBackgroundCanvas } from '@/components/CyberBackgroundCanvas';
 import { Navbar } from '@/components/landing/Navbar';
 import { Hero } from '@/components/landing/Hero';
 import { Demo } from '@/components/landing/Demo';
+import { Agent } from '@/components/landing/Agent';
 import { Engine } from '@/components/landing/Engine';
 import { Why } from '@/components/landing/Why';
 import { Stats } from '@/components/landing/Stats';
@@ -30,6 +31,7 @@ export default function Home() {
       <main id="top" className="relative z-10 flex flex-col">
         <Hero onStartDemo={startDemo} />
         <Demo registerScanner={(fn) => { scannerRef.current = fn; }} />
+        <Agent />
         <Engine />
         <Why />
         <Stats />

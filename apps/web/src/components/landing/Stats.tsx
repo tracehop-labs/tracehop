@@ -107,8 +107,11 @@ export function Stats() {
     }
 
     loadSupabaseStats();
+    // ponytail: agent scans land in DB every 5 min, repoll so numbers climb live
+    const poll = setInterval(() => { if (!document.hidden) loadSupabaseStats(); }, 60000);
     return () => {
       alive = false;
+      clearInterval(poll);
     };
   }, []);
 

@@ -257,6 +257,9 @@ export function Demo({ registerScanner }: DemoProps) {
             try { playClick(); } catch { }
           } else if (ev === 'verdict') {
             clearTimeout(timeout);
+            // ponytail: cache-hit path skips clustering events, verdict = all done
+            markStage('clusters');
+            markStage('bundle');
                         markStage('verdict');
             setLiveResult(data);
             setScanMs(Date.now() - scanStartRef.current);

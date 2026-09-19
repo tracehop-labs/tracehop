@@ -1134,14 +1134,15 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function handleScan(mint: string | null, stream: boolean, userWallet: string | null, clientIp: string, txHash: string | null = null): Promise<Response> {
+export async function handleScan(mint: string | null, stream: boolean, userWallet: string | null, clientIp: string, txHash: string | null = null, bypassGate = false): Promise<Response> {
   if (!mint) {
     return new Response(JSON.stringify({ error: 'Missing mint address' }), { status: 400 });
   }
 
   // Evaluate Robinhood Chain gating (free anonymous scans daily per IP or ARDRILL hold)
-  const decision = await evaluateGating(userWallet, clientIp);
-  if (!decision.allowed) {
+  // ponytail: bypassGate only from server-authed callers (agent cron), manual paths pass false
+  const decision = bypassGate ? null : await evaluateGating(userWallet, clientIp);
+  if (decision && !decision.allowed) {
     const anonUsed = decision.used ?? 0;
     const anonTotal = anonUsed + (decision.remaining ?? 0);
     return new Response(
@@ -1173,7 +1174,7 @@ export async function handleScan(mint: string | null, stream: boolean, userWalle
     );
   }
 
-  if (decision.reason === 'anon_free') {
+  if (decision?.reason === 'anon_free') {
     await bumpAnonUsage(clientIp);
   }
 
