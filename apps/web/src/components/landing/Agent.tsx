@@ -237,14 +237,13 @@ export function Agent() {
         setNext(`syncing…`);
         setExpecting(true);
 
-        // Overdue or due: trigger client-backed run once every 20s if still waiting
+        // If background cron is overdue by >45s, fire client backup trigger to keep chain fresh
         const now = Date.now();
-        if (now - lastTriggerRef.current > 20000 && !busyRef.current) {
+        if (elapsed >= CADENCE_SEC + 45 && now - lastTriggerRef.current > 30000 && !busyRef.current) {
           lastTriggerRef.current = now;
           fetch('/api/v1/agent/run?client_trigger=true')
             .then(async (res) => {
               if (res.ok) {
-                const j = await res.json();
                 load();
               }
             })

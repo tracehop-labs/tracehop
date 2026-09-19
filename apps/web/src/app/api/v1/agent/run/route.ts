@@ -58,6 +58,8 @@ async function discoverMint(): Promise<string | null> {
   return m ?? null;
 }
 
+let isScanRunning = false;
+
 export async function GET(request: NextRequest) {
   const secret = request.nextUrl.searchParams.get('secret');
   const auth = request.headers.get('authorization');
@@ -66,35 +68,47 @@ export async function GET(request: NextRequest) {
   const expectedSecret = process.env.CRON_SECRET || 'h7E6pq0iayOZdKQNexTb3uIUtzDLXjlvWJP2S4kBfwos89VH';
   const isAuthed = (secret && secret === expectedSecret) || auth === `Bearer ${expectedSecret}`;
 
-  if (!isAuthed) {
-    if (clientTrigger) {
-      // Allow browser client to trigger ONLY if the newest scan in DB is older than 5 minutes
-      const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-      const { data: recent } = await supabase
-        .from('predictions')
-        .select('created_at')
-        .gte('created_at', fiveMinAgo)
-        .order('created_at', { ascending: false })
-        .limit(1);
+  if (!isAuthed && !clientTrigger) {
+    return new Response(JSON.stringify({ error: 'unauthorized' }), { status: 401 });
+  }
 
-      if (recent && recent.length > 0) {
-        return new Response(JSON.stringify({ error: 'throttled', message: 'Last scan was less than 5 minutes ago' }), { status: 429 });
-      }
-    } else {
-      return new Response(JSON.stringify({ error: 'unauthorized' }), { status: 401 });
+  // 1. Concurrency lock: reject if another scan is currently running in this lambda
+  if (isScanRunning) {
+    return new Response(JSON.stringify({ error: 'conflict', message: 'Scan cycle currently in progress' }), { status: 409 });
+  }
+
+  // 2. Global DB deduplication: reject if ANY scan was recorded in the last 4 minutes
+  const fourMinAgo = new Date(Date.now() - 4 * 60 * 1000).toISOString();
+  const { data: recent } = await supabase
+    .from('predictions')
+    .select('created_at')
+    .gte('created_at', fourMinAgo)
+    .order('created_at', { ascending: false })
+    .limit(1);
+
+  if (recent && recent.length > 0) {
+    return new Response(
+      JSON.stringify({ error: 'throttled', message: 'A scan was already executed less than 4 minutes ago' }),
+      { status: 429, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  isScanRunning = true;
+  try {
+    const mint = await discoverMint();
+    if (!mint) {
+      return new Response(JSON.stringify({ error: 'no fresh mint found' }), { status: 404 });
     }
-  }
-  const mint = await discoverMint();
-  if (!mint) {
-    return new Response(JSON.stringify({ error: 'no fresh mint found' }), { status: 404 });
-  }
 
-  // Blocking mode: same engine as manual scan, gate bypassed (route authed by
-  // CRON_SECRET), auto-saved to DB. Manual gating untouched.
-  const res = await handleScan(mint, false, null, 'agent-cron', null, true);
-  const body = await res.json();
-  return new Response(JSON.stringify({ mint, ...body }), {
-    status: res.status,
-    headers: { 'Content-Type': 'application/json' },
-  });
+    // Blocking mode: same engine as manual scan, gate bypassed (route authed by
+    // CRON_SECRET), auto-saved to DB. Manual gating untouched.
+    const res = await handleScan(mint, false, null, 'agent-cron', null, true);
+    const body = await res.json();
+    return new Response(JSON.stringify({ mint, ...body }), {
+      status: res.status,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } finally {
+    isScanRunning = false;
+  }
 }
